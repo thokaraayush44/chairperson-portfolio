@@ -8,18 +8,21 @@ export default function HeroContent() {
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(74,10,23,0.28),rgba(26,3,10,0.56))]" />
 
       {/* Hero Content */}
-      <div className="relative z-10 mx-auto flex min-h-[500px] w-full max-w-[1100px] items-end px-5">
+      <div className="relative z-10 mx-auto grid min-h-screen w-full max-w-[1300px] grid-cols-1 items-end gap-10 px-4 lg:grid-cols-[1.1fr_0.9fr] lg:px-6 xl:px-0">
         {/* Portrait */}
-        <Image
-          src="/images/image2.png"
-          alt="Bishnu Bahadur Rokaya"
-          width={700}
-          height={687}
-          className="h-[687px] w-[700px] object-contain"
-        />
+        <div className="relative h-full w-full">
+          <Image
+            src="/images/image2.png"
+            alt="Bishnu Bahadur Rokaya"
+            height={590}
+            width={720}
+            className="object-cover"
+            style={{ objectPosition: "center 100%" }}
+          />
+        </div>
 
         {/* Right Content */}
-        <div className="absolute right-[7px] top-[200px] z-20 w-[400px]">
+        <div className="z-20 flex flex-col items-start lg:pb-0">
           {/* Affiliation */}
           <div className="mb-4 flex items-center gap-2">
             <Image
@@ -71,7 +74,7 @@ export default function HeroContent() {
         </div>
       </div>
       {/* Stats Section (below hero) */}
-      <div className="relative z-20 mt-8 w-full bg-primary-100 py-12">
+      <div className="relative z-20 mt-0 w-full bg-primary-100 py-12">
         <div className="mx-auto flex max-w-[1100px] items-center justify-between px-5 text-center text-white">
           <div className="flex-1">
             <div className="text-4xl font-semibold">12+</div>

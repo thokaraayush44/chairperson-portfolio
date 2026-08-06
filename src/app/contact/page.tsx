@@ -1,12 +1,13 @@
 import React from "react";
+import { Container } from "@/components/Container";
 import { PageTitleBanner } from "@/components/PageTitleBanner";
 
 const page = () => {
   return (
-    <>
-      <PageTitleBanner title="Contact" breadcrumb="Home > Contact" />
+    <main className="pt-18.5 flex flex-col gap-[10px]">
 
-      <main className="mx-auto max-w-6xl px-6 py-12">
+      <Container className="flex flex-col gap-[10px]">
+        <PageTitleBanner title="Contact" breadcrumb="Home > Contact" />
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr]">
           <section className="space-y-8">
             <p className="text-lg leading-8 text-slate-700">
@@ -66,8 +67,8 @@ const page = () => {
             </div>
           </aside>
         </div>
-      </main>
-    </>
+      </Container>
+    </main>
   );
 };
 

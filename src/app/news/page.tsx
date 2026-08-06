@@ -1,12 +1,16 @@
 import React from "react";
+import { Container } from "@/components/Container";
 import { PageTitleBanner } from "@/components/PageTitleBanner";
 
 const page = () => {
   return (
-    <>
-      <PageTitleBanner title="News & Media" breadcrumb="Home > News & Media" />
-      <div className="px-6 py-12">News page content</div>
-    </>
+    <main className="pt-18.5 flex flex-col gap-[10px]">
+      
+      <Container className="flex flex-col gap-[10px]">
+        <PageTitleBanner title="News & Media" breadcrumb="Home > News & Media" />
+        News page content
+        </Container>
+    </main>
   );
 };
 

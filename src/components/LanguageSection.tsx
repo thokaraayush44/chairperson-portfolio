@@ -1,16 +1,16 @@
 import React from "react";
 
 export function LanguageSection() {
-  const langs = ["Nepali", "English", "Local Dialect"];
+  const langs = ["Nepali", "English", "Khas", "Hindi"];
 
   return (
-    <section className="mx-auto max-w-6xl px-6 py-6">
-      <h3 className="mb-4 text-xl font-semibold text-slate-900">Languages</h3>
+    <section className="mx-auto w-full max-w-[1440px] px-12 py-6">
+      <h3 className="mb-4 text-3xl font-bold text-slate-900">Languages Spoken</h3>
       <div className="flex flex-wrap gap-3">
         {langs.map((l) => (
           <span
             key={l}
-            className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800"
+            className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-sm font-medium text-slate-700"
           >
             {l}
           </span>
