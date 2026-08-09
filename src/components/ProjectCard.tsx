@@ -5,7 +5,8 @@ import { StatusBadge } from "./StatusBadge";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <article className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5">
+    <Link href={project.href} className="group">
+      <article className="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 transition duration-200 hover:-translate-y-0.5">
       <div className="relative aspect-[4/3] w-full">
         <Image
           src={project.image}
@@ -30,10 +31,7 @@ export function ProjectCard({ project }: { project: Project }) {
           {project.description}
         </p>
 
-        <Link
-          href={project.href}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-rose-900 transition-colors hover:text-rose-950 hover:underline"
-        >
+        <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-rose-900 transition-colors group-hover:text-rose-950">
           View Details
           <Image
             src="/icons/Arrow1.svg"
@@ -42,8 +40,9 @@ export function ProjectCard({ project }: { project: Project }) {
             height={12}
             className="h-4 w-4"
           />
-        </Link>
+        </div>
       </div>
     </article>
+    </Link>
   );
 }

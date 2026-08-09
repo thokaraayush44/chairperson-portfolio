@@ -20,7 +20,7 @@ export function FeaturedWork() {
 
         <div className="mt-10 text-center">
           <Link
-            href="/projects"
+            href="/work"
             className="inline-flex items-center gap-1.5 font-semibold text-rose-900"
           >
             View All Projects

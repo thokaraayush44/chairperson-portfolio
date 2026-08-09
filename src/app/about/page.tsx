@@ -12,7 +12,7 @@ const page = () => {
   return (
     <main className="pt-18.5 flex flex-col gap-[10px]">
 
-      <Container className="flex flex-col gap-[10px]">
+      <Container className="flex flex-col">
         <PageTitleBanner title="About Hon. Bishnu Bahadur Rokaya" breadcrumb="Home > About" />
         <BiographySection />
         <VisionIdeology />

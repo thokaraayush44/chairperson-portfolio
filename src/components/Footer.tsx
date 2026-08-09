@@ -38,7 +38,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/projects" className="hover:text-white">
+                <Link href="/work" className="hover:text-white">
                   Work
                 </Link>
               </li>
@@ -116,7 +116,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="border-t border-white/10 px-6 py-6 text-center text-sm text-white/60 sm:px-8">
+      <div className="border-t border-white/10 px-6 py-2 text-center text-sm text-white/60 sm:px-8">
         © 2026 Office of the Chairperson, Kalikot District Coordination
         Committee. All rights reserved.
       </div>

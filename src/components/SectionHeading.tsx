@@ -33,7 +33,7 @@ export default function SectionHeading({
 
         <div className="mt-15">
           <a
-            href="about-more"
+            href="/about"
             aria-label="Read more about the chairperson"
             className="inline-flex items-center gap-1.5 font-semibold text-rose-900"
           >
