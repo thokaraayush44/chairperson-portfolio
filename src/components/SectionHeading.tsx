@@ -31,7 +31,7 @@ export default function SectionHeading({
           }
         </p>
 
-        <div className="mt-15">
+        <div className="mt-12">
           <a
             href="/about"
             aria-label="Read more about the chairperson"

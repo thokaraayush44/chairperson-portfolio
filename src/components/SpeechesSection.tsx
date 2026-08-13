@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const speeches = [
   {
@@ -25,52 +28,56 @@ const speeches = [
   },
 ];
 
-const pressPhotos = [
-  {
-    id: "health-post-inauguration-ward-9",
-    title: "Health Post Inauguration, Ward 9",
-    image: "/images/news5.jpg",
-  },
-  {
-    id: "annual-budget-session",
-    title: "Annual Budget Session, DCC Hall",
-    image: "/images/news1.jpg",
-  },
-  {
-    id: "rural-road-site-visit",
-    title: "Rural Road Site Visit, Ward 4",
-    image: "/images/news4.jpg",
-  },
-  {
-    id: "drinking-water-launch",
-    title: "Drinking Water Scheme Launch",
-    image: "/images/news7.jpg",
-  },
-  {
-    id: "community-meeting-ward-2",
-    title: "Community Meeting, Ward 2",
-    image: "/images/news6.jpg",
-  },
-  {
-    id: "province-development-forum",
-    title: "Karnali Province Development Forum",
-    image: "/images/news2.jpg",
-  },
-];
+type GalleryPhoto = {
+  _id: string;
+  title: string;
+  image: string;
+  description?: string;
+  date?: string;
+};
 
 export function SpeechesSection() {
+  const [gallery, setGallery] = useState<GalleryPhoto[]>([]);
+  const [loadingGallery, setLoadingGallery] = useState(true);
+
+  useEffect(() => {
+    const fetchGallery = async () => {
+      try {
+        const response = await fetch("/api/gallery");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch gallery");
+        }
+
+        const result = await response.json();
+
+        setGallery(result.data);
+      } catch (error) {
+        console.error("Failed to fetch gallery:", error);
+      } finally {
+        setLoadingGallery(false);
+      }
+    };
+
+    fetchGallery();
+  }, []);
+
   return (
     <section className="mt-20 bg-white">
-      <div className="mx-auto max-w-7xl w-full px-9 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-7xl px-9 sm:px-6 lg:px-8">
+        {/* Speeches Section */}
         <div className="mb-8">
-          <h2 className="text-4xl font-serif font-semibold tracking-[0.02em] text-slate-950">
+          <h2 className="font-serif text-4xl font-semibold tracking-[0.02em] text-slate-950">
             Speeches & Public Appearances
           </h2>
         </div>
 
         <div className="grid gap-6 md:grid-cols-3">
           {speeches.map((speech) => (
-            <article key={speech.id} className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5">
+            <article
+              key={speech.id}
+              className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-black/5"
+            >
               <Link href={speech.href} className="group block">
                 <div className="relative overflow-hidden bg-slate-100">
                   <div className="aspect-[5/3] w-full transition duration-300 group-hover:scale-[1.09]">
@@ -83,10 +90,19 @@ export function SpeechesSection() {
                     />
                   </div>
 
+                  {/* Play Button */}
                   <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                     <span className="flex h-14 w-14 items-center justify-center rounded-full border border-white/80 bg-white/90 shadow-lg">
-                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-slate-900">
-                        <path d="M10 8l6 4-6 4V8Z" fill="currentColor" />
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-slate-900"
+                      >
+                        <path
+                          d="M10 8l6 4-6 4V8Z"
+                          fill="currentColor"
+                        />
                       </svg>
                     </span>
                   </div>
@@ -96,6 +112,7 @@ export function SpeechesSection() {
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-900/80">
                     {speech.date}
                   </p>
+
                   <h3 className="text-lg font-semibold text-slate-950">
                     {speech.title}
                   </h3>
@@ -105,47 +122,69 @@ export function SpeechesSection() {
           ))}
         </div>
 
+        {/* Press Photo Gallery */}
         <div className="mt-16">
           <div className="mb-8">
-            <h3 className="text-3xl font-serif font-semibold tracking-[0.02em] text-slate-950">
+            <h3 className="font-serif text-3xl font-semibold tracking-[0.02em] text-slate-950">
               Press Photo Gallery
             </h3>
-            <p className="mt-2 text-sm text-slate-600">Click any photo to view full size</p>
+
+            <p className="mt-2 text-sm text-slate-600">
+              Click any photo to view full size
+            </p>
           </div>
 
+          {/* Gallery */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {pressPhotos.map((photo) => (
-              <article key={photo.id} className="overflow-hidden rounded-[1.75rem] bg-white shadow-sm ring-1 ring-black/5">
-                <div className="relative overflow-hidden bg-slate-100">
-                  <div className="aspect-[5/3] w-full">
-                    <Image
-                      src={photo.image}
-                      alt={photo.title}
-                      fill
-                      className="object-cover"
-                      sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
-                    />
+            {loadingGallery ? (
+              <div className="col-span-full py-10 text-center text-sm text-slate-600">
+                Loading gallery...
+              </div>
+            ) : gallery.length === 0 ? (
+              <div className="col-span-full py-10 text-center text-sm text-slate-600">
+                No photos available.
+              </div>
+            ) : (
+              gallery.map((photo) => (
+                <article
+                  key={photo._id}
+                  className="overflow-hidden rounded-[1.75rem] bg-white shadow-sm ring-1 ring-black/5"
+                >
+                  <div className="relative overflow-hidden bg-slate-100">
+                    <div className="aspect-[5/3] w-full">
+                      <Image
+                        src={photo.image}
+                        alt={photo.title}
+                        fill
+                        className="object-cover transition duration-300 hover:scale-105"
+                        sizes="(min-width: 1280px) 420px, (min-width: 768px) 50vw, 100vw"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="px-4 py-4 text-sm text-slate-700">
-                  {photo.title}
-                </div>
-              </article>
-            ))}
+                  <div className="px-4 py-4 text-sm text-slate-700">
+                    {photo.title}
+                  </div>
+                </article>
+              ))
+            )}
           </div>
 
-          <div className="mt-12 mb-12 rounded-[1.5rem] border border-rose-900 bg-rose-50/30 p-6 text-sm text-slate-900 shadow-sm">
+          {/* Media & Press */}
+          <div className="mb-12 mt-12 rounded-[1.5rem] border border-rose-900 bg-rose-50/30 p-6 text-sm text-slate-900 shadow-sm">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-xs font-semibold text-rose-900/80">
                   Media & Press Inquiries
                 </p>
-                <p className="mt-1 font-semibold text-slate-900">[Press/Media Officer Name], Media Coordinator</p>
+
+                <p className="mt-1 font-semibold text-slate-900">
+                  [Press/Media Officer Name], Media Coordinator
+                </p>
               </div>
 
               <div className="space-y-2 text-sm text-slate-900 sm:text-right">
-                <p>Phone: +977-98XXXXXXXX</p> 
+                <p>Phone: +977-98XXXXXXXX</p>
                 <p>Email: press@kalikot.gov.np</p>
               </div>
             </div>

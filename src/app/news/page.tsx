@@ -67,14 +67,14 @@ export default function NewsPage() {
   }
 
   return (
-    <main>
+    <main className="pt-18.5 flex flex-col  gap-[10px]">
       <PageTitleBanner
         title="News"
         breadcrumb="Home > News"
       />
 
       <Container>
-        <h1 className="mt-10 text-4xl font-serif font-semibold text-neutral-900">
+        <h1 className="mt-10 text-center text-4xl font-serif font-semibold text-neutral-900">
           Latest News
         </h1>
 

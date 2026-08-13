@@ -3,123 +3,208 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer
-      className="bg-primary-100 text-white"
-      style={{ padding: "43px 59px 20px 69px" }}
-    >
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-10 sm:px-0 lg:flex-row lg:items-start lg:justify-between">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3 text-white">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-sm font-semibold">
-              <Image src="/icons/logo1.png" alt="Logo" width={20} height={20} />
-            </span>
-            <span className="text-sm font-semibold">Bishnu Bahadur Rokaya</span>
-          </div>
-          <p className="max-w-sm text-sm text-white/80">
-            Official portfolio of the Chairperson, serving the people of
-            Kalikot.
-          </p>
-        </div>
+    <footer className="w-full bg-[#6C1511] text-white">
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-12">
-          <div>
-            <h3 className="mb-4 text-sm font-semibold tracking-[0.2em] text-[#C9982A]">
+      {/* Main Footer Content */}
+      <div className="mx-auto flex max-w-[1170px] items-end justify-center gap-[30px] px-5 pb-[22px] pt-[43px] lg:px-0">
+
+        {/* Left Content + Links + Contact */}
+        <div className="flex w-full flex-col gap-[47px] md:flex-row md:items-start">
+
+          {/* Brand */}
+          <div className="w-full shrink-0 md:w-[336px]">
+            <div className="flex items-center">
+              <Image
+                src="/icons/logo1.png"
+                alt="Logo"
+                width={25}
+                height={25}
+                className="h-[25px] w-[25px]"
+              />
+
+              <span className="pl-2 text-[18px] font-bold leading-7 text-white">
+                Bishnu Bahadur Rokaya
+              </span>
+            </div>
+
+            <p className="mt-4 w-full text-[14px] leading-normal text-[#EDEBE6]">
+              Official portfolio of the Chairperson, serving the people of
+              Kalikot.
+            </p>
+          </div>
+
+          {/* Quick Links */}
+          <div className="w-full shrink-0 md:w-[171px]">
+            <h3 className="mb-3 text-[15px] font-bold leading-normal text-[#C9982A]">
               Quick Links
             </h3>
-            <ul className="space-y-3 text-sm text-white/90">
+
+            <ul className="space-y-3 text-[14px] leading-normal">
+
               <li>
-                <Link href="/" className="hover:text-white">
+                <Link
+                  href="/"
+                  className="text-[#EDEBE6] transition hover:text-white"
+                >
                   Home
                 </Link>
               </li>
+
               <li>
-                <Link href="/about" className="hover:text-white">
+                <Link
+                  href="/about"
+                  className="text-[#EDEBE6] transition hover:text-white"
+                >
                   About
                 </Link>
               </li>
+
               <li>
-                <Link href="/work" className="hover:text-white">
+                <Link
+                  href="/journey"
+                  className="text-[#EDEBE6] transition hover:text-white"
+                >
+                  Timeline
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/work"
+                  className="text-[#EDEBE6] transition hover:text-white"
+                >
                   Work
                 </Link>
               </li>
+
               <li>
-                <Link href="/news" className="hover:text-white">
+                <Link
+                  href="/news"
+                  className="text-[#EDEBE6] transition hover:text-white"
+                >
                   News
                 </Link>
               </li>
+
               <li>
-                <Link href="/contact" className="hover:text-white">
+                <Link
+                  href="/contact"
+                  className="text-[#EDEBE6] transition hover:text-white"
+                >
                   Contact
                 </Link>
               </li>
+
             </ul>
           </div>
 
-          <div>
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[#C9982A]">
+          {/* Contact */}
+          <div className="w-full shrink-0 md:w-[259px]">
+
+            <h3 className="text-[14px] font-semibold uppercase leading-5 tracking-[0.7px] text-[#C9982A]">
               Contact
             </h3>
-            <div className="space-y-3 text-sm text-white/90">
-              <div className="flex items-center gap-3">
+
+            <div className="mt-4 space-y-3 text-[14px]">
+
+              {/* Phone */}
+              <div className="flex items-center gap-2">
                 <Image
                   src="/icons/Phone.svg"
                   alt="Phone"
-                  width={18}
-                  height={18}
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 shrink-0"
                 />
-                <span>+977 9700066129</span>
+
+                <span className="text-[#EDEBE6]">
+                  +977 9700066129
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+
+              {/* Email */}
+              <div className="flex items-center gap-2">
                 <Image
                   src="/icons/Email.svg"
                   alt="Email"
-                  width={18}
-                  height={18}
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 shrink-0"
                 />
-                <span>bishnurokaya@gmail.com</span>
+
+                <span className="text-[#EDEBE6]">
+                  bishnurokaya@gmail.com
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+
+              {/* YouTube */}
+              <div className="flex items-center gap-2">
                 <Image
                   src="/icons/Youtube.svg"
                   alt="YouTube"
-                  width={18}
-                  height={18}
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 shrink-0"
                 />
-                <span>youtube.com/bishnurokaya</span>
+
+                <span className="text-[#EDEBE6]">
+                  youtube.com/bishnurokaya
+                </span>
               </div>
-              <div className="flex items-center gap-3">
+
+              {/* Instagram */}
+              <div className="flex items-center gap-2">
                 <Image
                   src="/icons/Instagram.svg"
                   alt="Instagram"
-                  width={18}
-                  height={18}
+                  width={16}
+                  height={16}
+                  className="h-4 w-4 shrink-0"
                 />
-                <span>@bishnurokaya</span>
+
+                <span className="text-[#EDEBE6]">
+                  @bishnurokaya
+                </span>
               </div>
+
             </div>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-white/10 p-6 backdrop-blur">
-            <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-[#C9982A]">
-              Join our campaign
-            </h3>
-            <p className="text-sm leading-6 text-white/90">
-              Sign up for our newsletter for the latest updates and important
-              information.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-rose-900 transition hover:bg-slate-100"
-            >
-              Join Now
-            </Link>
-          </div>
         </div>
+
+        {/* Newsletter / Campaign */}
+        <div className="w-[280px] shrink-0 rounded-[24px] border border-white/10 bg-white/10 p-[24px]">
+
+          <h3 className="text-[16px] font-semibold leading-normal text-[#C9982A]">
+            Join our campaign
+          </h3>
+
+          <p className="mt-3 w-[231px] text-[16px] leading-normal text-[#90A1B9]">
+            Sign up for our newsletter for the latest updates and important
+            information.
+          </p>
+
+          <Link
+            href="/contact"
+            className="mt-4 flex h-[58px] w-[232px] items-center justify-center rounded-[18px] bg-white text-[18px] font-semibold text-[#8A1538] transition hover:bg-slate-100"
+          >
+            Join Now
+          </Link>
+
+        </div>
+
       </div>
-      <div className="border-t border-white/10 px-6 py-2 text-center text-sm text-white/60 sm:px-8">
+
+      {/* Divider */}
+      <div className="mx-[69px] border-t border-[#C9C6BF]" />
+
+      {/* Copyright */}
+      <div className="px-5 py-[18px] text-center text-[13px] leading-normal text-[#C9C6BF]">
         © 2026 Office of the Chairperson, Kalikot District Coordination
-        Committee. All rights reserved.
+        Committee. All rights reserved. This is an official government
+        portfolio website.
       </div>
+
     </footer>
   );
 }

@@ -1,10 +1,54 @@
-import Link from "next/link";
-import { featuredProjects } from "../../Projects/Project";
-import { ProjectCard } from "./ProjectCard";
-import { JourneySection } from "./JourneySection";
+"use client";
 
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ProjectCard } from "./ProjectCard";
+
+type Work = {
+  projectId: string;
+  title: string;
+  description: string;
+  image: string;
+  galleryImages: string[];
+  category: string;
+  ward: string;
+  status: "Ongoing" | "Completed";
+  completedDate?: string;
+  location: string;
+  eventTypes: string;
+  eventCategory: string;
+  problem: string;
+  action: string;
+  outcome: string;
+};
 
 export function FeaturedWork() {
+  const [projects, setProjects] = useState<Work[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWork = async () => {
+      try {
+        const response = await fetch("/api/work");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch work");
+        }
+
+        const result = await response.json();
+
+        // Show only first 3 projects on homepage
+        setProjects(result.data.slice(0, 3));
+      } catch (error) {
+        console.error("Failed to fetch featured work:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWork();
+  }, []);
+
   return (
     <section className="bg-[#F5F2EC] px-0 py-20">
       <div className="mx-auto max-w-6xl">
@@ -12,11 +56,20 @@ export function FeaturedWork() {
           Featured Work
         </h2>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="mt-12 text-center text-neutral-600">
+            Loading projects...
+          </div>
+        ) : (
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project) => (
+              <ProjectCard
+                key={project.projectId}
+                project={project}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="mt-10 text-center">
           <Link
@@ -24,6 +77,7 @@ export function FeaturedWork() {
             className="inline-flex items-center gap-1.5 font-semibold text-rose-900"
           >
             View All Projects
+
             <svg
               width="16"
               height="16"
@@ -44,9 +98,6 @@ export function FeaturedWork() {
           </Link>
         </div>
       </div>
-
-      <JourneySection />
     </section>
-    
   );
 }

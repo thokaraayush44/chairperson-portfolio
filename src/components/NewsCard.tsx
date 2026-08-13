@@ -11,6 +11,7 @@ type News = {
 
 export function NewsCard({ project }: { project: News }) {
   return (
+    <Link href={`/news/${project._id}`} className="block">
     <article className="group overflow-hidden rounded-[2rem] border border-neutral-200 bg-white shadow-sm transition-shadow hover:shadow-md">
       {/* Image */}
       {project.image && (
@@ -49,9 +50,7 @@ export function NewsCard({ project }: { project: News }) {
         </div>
 
         {/* Details Link */}
-        <Link
-          href={`/news/${project._id}`}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-rose-900 transition-colors hover:text-rose-950 hover:underline"
+        <div className="inline-flex items-center gap-1.5 text-sm font-semibold text-rose-900 transition-colors hover:text-rose-950 hover:underline"
         >
           View Details
 
@@ -62,8 +61,9 @@ export function NewsCard({ project }: { project: News }) {
             height={12}
             className="h-4 w-4"
           />
-        </Link>
+        </div>
       </div>
     </article>
+  </Link>
   );
 }
