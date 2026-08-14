@@ -29,7 +29,7 @@ export function FeaturedWork() {
   useEffect(() => {
     const fetchWork = async () => {
       try {
-        const response = await fetch("/api/work");
+        const response = await fetch("/api/works");
 
         if (!response.ok) {
           throw new Error("Failed to fetch work");

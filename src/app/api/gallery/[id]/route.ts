@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import Gallery from "@/models/Gallery";
-import mongoose from "mongoose";
 
-// GET one gallery photo
+// ========================================
+// GET SINGLE GALLERY
+// ========================================
 export async function GET(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -15,10 +17,7 @@ export async function GET(
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid gallery ID",
-        },
+        { message: "Invalid gallery ID" },
         { status: 400 }
       );
     }
@@ -27,37 +26,27 @@ export async function GET(
 
     if (!gallery) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Gallery photo not found",
-        },
+        { message: "Gallery not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        data: gallery,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(gallery, { status: 200 });
   } catch (error) {
-    console.error("GET /api/gallery/[id] error:", error);
+    console.error("GET gallery error:", error);
 
     return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to fetch gallery photo",
-      },
+      { message: "Failed to fetch gallery" },
       { status: 500 }
     );
   }
 }
 
-// PUT update gallery photo
-export async function PUT(
-  request: NextRequest,
+// ========================================
+// PATCH GALLERY
+// ========================================
+export async function PATCH(
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -67,34 +56,40 @@ export async function PUT(
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid gallery ID",
-        },
+        { message: "Invalid gallery ID" },
         { status: 400 }
       );
     }
 
-    const body = await request.json();
+    const body = await req.json();
 
-    const { title, image } = body;
+    // Only allow gallery fields to be updated
+    const updateData: {
+      title?: string;
+      image?: string;
+      category?: string;
+      date?: string;
+    } = {};
 
-    if (!title || !image) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Title and image are required",
-        },
-        { status: 400 }
-      );
+    if (body.title !== undefined) {
+      updateData.title = body.title;
+    }
+
+    if (body.image !== undefined) {
+      updateData.image = body.image;
+    }
+
+    if (body.category !== undefined) {
+      updateData.category = body.category;
+    }
+
+    if (body.date !== undefined) {
+      updateData.date = body.date;
     }
 
     const updatedGallery = await Gallery.findByIdAndUpdate(
       id,
-      {
-        title,
-        image,
-      },
+      { $set: updateData },
       {
         new: true,
         runValidators: true,
@@ -103,38 +98,27 @@ export async function PUT(
 
     if (!updatedGallery) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Gallery photo not found",
-        },
+        { message: "Gallery not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(
-      {
-        success: true,
-        message: "Gallery photo updated successfully",
-        data: updatedGallery,
-      },
-      { status: 200 }
-    );
+    return NextResponse.json(updatedGallery, { status: 200 });
   } catch (error) {
-    console.error("PUT /api/gallery/[id] error:", error);
+    console.error("PATCH gallery error:", error);
 
     return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to update gallery photo",
-      },
+      { message: "Failed to update gallery" },
       { status: 500 }
     );
   }
 }
 
-// DELETE gallery photo
+// ========================================
+// DELETE GALLERY
+// ========================================
 export async function DELETE(
-  request: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
@@ -144,10 +128,7 @@ export async function DELETE(
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Invalid gallery ID",
-        },
+        { message: "Invalid gallery ID" },
         { status: 400 }
       );
     }
@@ -156,29 +137,20 @@ export async function DELETE(
 
     if (!deletedGallery) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Gallery photo not found",
-        },
+        { message: "Gallery not found" },
         { status: 404 }
       );
     }
 
     return NextResponse.json(
-      {
-        success: true,
-        message: "Gallery photo deleted successfully",
-      },
+      { message: "Gallery deleted successfully" },
       { status: 200 }
     );
   } catch (error) {
-    console.error("DELETE /api/gallery/[id] error:", error);
+    console.error("DELETE gallery error:", error);
 
     return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to delete gallery photo",
-      },
+      { message: "Failed to delete gallery" },
       { status: 500 }
     );
   }

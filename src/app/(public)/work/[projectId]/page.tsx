@@ -32,7 +32,7 @@ export default async function WorkDetailPage({
   const { projectId } = await params;
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/work/${projectId}`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/works/${projectId}`,
     {
       cache: "no-store",
     }

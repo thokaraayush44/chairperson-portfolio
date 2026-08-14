@@ -32,7 +32,7 @@ export async function GET(
       { status: 200 },
     );
   } catch (error) {
-    console.error("GET /api/work/[projectId] error:", error);
+    console.error("GET /api/works/[projectId] error:", error);
 
     return NextResponse.json(
       {
@@ -44,8 +44,9 @@ export async function GET(
   }
 }
 
-// PUT - Update one work by projectId
-export async function PUT(
+// PATCH - Partially update one work by projectId
+// projectId cannot be changed
+export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ projectId: string }> },
 ) {
@@ -55,87 +56,74 @@ export async function PUT(
     const { projectId } = await params;
     const body = await request.json();
 
-    const {
-      projectId: newProjectId,
-      title,
-      description,
-      image,
-      galleryImages,
-      category,
-      ward,
-      status,
-      completedDate,
-      location,
-      eventTypes,
-      eventCategory,
-      problem,
-      action,
-      outcome,
-    } = body;
+    /*
+     * projectId is immutable.
+     * Even if the frontend sends projectId,
+     * we remove it before updating the database.
+     */
+    delete body.projectId;
 
-    // Validate required fields
-    if (
-      !newProjectId ||
-      !title ||
-      !description ||
-      !image ||
-      !category ||
-      !ward ||
-      !status ||
-      !location ||
-      !eventTypes ||
-      !eventCategory ||
-      !problem ||
-      !action ||
-      !outcome
-    ) {
+    /*
+     * Only these fields are allowed to be updated.
+     * _id, projectId, createdAt, etc. cannot be changed.
+     */
+    const allowedFields = [
+      "title",
+      "description",
+      "image",
+      "galleryImages",
+      "category",
+      "ward",
+      "status",
+      "completedDate",
+      "location",
+      "eventTypes",
+      "eventCategory",
+      "problem",
+      "action",
+      "outcome",
+    ];
+
+    const updates: Record<string, unknown> = {};
+
+    /*
+     * Only add fields that were actually provided.
+     *
+     * Example:
+     * {
+     *   "image": "/images/new.jpg"
+     * }
+     *
+     * Only image will be updated.
+     */
+    for (const field of allowedFields) {
+      if (body[field] !== undefined) {
+        updates[field] = body[field];
+      }
+    }
+
+    // Nothing to update
+    if (Object.keys(updates).length === 0) {
       return NextResponse.json(
         {
           success: false,
-          message: "All required fields must be provided",
+          message: "No fields provided for update",
         },
         { status: 400 },
       );
     }
 
-    // Check if the new projectId already belongs to another project
-    if (newProjectId !== projectId) {
-      const existingWork = await Work.findOne({
-        projectId: newProjectId,
-      });
-
-      if (existingWork) {
-        return NextResponse.json(
-          {
-            success: false,
-            message: "Project ID already exists",
-          },
-          { status: 409 },
-        );
-      }
-    }
-
+    /*
+     * Find the work using the ORIGINAL projectId
+     * and update only the provided fields.
+     */
     const updatedWork = await Work.findOneAndUpdate(
       { projectId },
       {
-        projectId: newProjectId,
-        title,
-        description,
-        image,
-        galleryImages: galleryImages || [],
-        category,
-        ward,
-        status,
-        completedDate,
-        location,
-        eventTypes,
-        eventCategory,
-        problem,
-        action,
-        outcome,
+        $set: updates,
       },
       {
-        new: true,
+        returnDocument: "after",
         runValidators: true,
       },
     );
@@ -159,7 +147,7 @@ export async function PUT(
       { status: 200 },
     );
   } catch (error) {
-    console.error("PUT /api/work/[projectId] error:", error);
+    console.error("PATCH /api/works/[projectId] error:", error);
 
     return NextResponse.json(
       {
@@ -201,7 +189,7 @@ export async function DELETE(
       { status: 200 },
     );
   } catch (error) {
-    console.error("DELETE /api/work/[projectId] error:", error);
+    console.error("DELETE /api/works/[projectId] error:", error);
 
     return NextResponse.json(
       {

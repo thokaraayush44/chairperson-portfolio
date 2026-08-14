@@ -3,6 +3,8 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IGallery extends Document {
   title: string;
   image: string;
+  category: string;
+  date: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,6 +21,18 @@ const GallerySchema = new Schema<IGallery>(
       type: String,
       required: true,
       trim: true,
+    },
+
+    category: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    date: {
+      type: Date,
+      required: true,
+      default: Date.now,
     },
   },
   {

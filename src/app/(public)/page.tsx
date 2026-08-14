@@ -1,9 +1,9 @@
-import HeroSection from "../components/HeroSection";
-import SectionHeading from "../components/SectionHeading";
-import { FeaturedWork } from "../components/FeaturedWork";
-import { JourneySection } from "../components/JourneySection";
-import { LatestNews } from "../components/LatestNews";
-import { ContactCta } from "../components/ContactCta";
+import HeroSection from "../../components/HeroSection";
+import SectionHeading from "../../components/SectionHeading";
+import { FeaturedWork } from "../../components/FeaturedWork";
+import { JourneySection } from "../../components/JourneySection";
+import { LatestNews } from "../../components/LatestNews";
+import { ContactCta } from "../../components/ContactCta";
 
 export default function Home() {
   return (

@@ -67,34 +67,34 @@ export default function NewsPage() {
   }
 
   return (
-    <main className="pt-18.5 flex flex-col  gap-[10px]">
-      <PageTitleBanner
-        title="News"
-        breadcrumb="Home > News"
-      />
+  <main>
+    <PageTitleBanner
+      title="News"
+      breadcrumb="Home > News"
+    />
 
-      <Container>
-        <h1 className="mt-10 text-center text-4xl font-serif font-semibold text-neutral-900">
-          Latest News
-        </h1>
+    <section className="bg-white px-16 py-16">
+      <h1 className="font-serif text-[36px] font-bold text-[#221F1A]">
+        Latest News
+      </h1>
 
-        {news.length === 0 ? (
-          <div className="my-10 rounded-3xl border border-neutral-200 bg-white p-10 text-center text-neutral-600">
-            No news available.
-          </div>
-        ) : (
-          <section className="mx-auto my-10 grid max-w-7xl gap-12 md:grid-cols-2 xl:grid-cols-2">
-            {news.map((item) => (
-              <NewsCard
-                key={item._id}
-                project={item}
-              />
-            ))}
-          </section>
-        )}
+      {news.length === 0 ? (
+        <div className="my-10 rounded-3xl border border-neutral-200 bg-white p-10 text-center text-neutral-600">
+          No news available.
+        </div>
+      ) : (
+        <section className="mt-9 grid grid-cols-1 gap-x-[59px] gap-y-[39px] md:grid-cols-2">
+          {news.map((item) => (
+            <NewsCard
+              key={item._id}
+              project={item}
+            />
+          ))}
+        </section>
+      )}
 
-        <SpeechesSection />
-      </Container>
-    </main>
+      <SpeechesSection />
+    </section>
+  </main>
   );
-}
+} 

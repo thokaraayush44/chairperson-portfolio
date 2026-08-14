@@ -7,7 +7,7 @@ export async function GET() {
   try {
     await connectDB();
 
-    const gallery = await Gallery.find().sort({ createdAt: -1 });
+    const gallery = await Gallery.find().sort({ date: -1 });
 
     return NextResponse.json(
       {
@@ -36,21 +36,49 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    const { title, image } = body;
+    const { title, image, category, date } = body;
 
-    if (!title || !image) {
+    console.log("Gallery POST body:", body);
+
+    // Validate title
+    if (!title?.trim()) {
       return NextResponse.json(
         {
           success: false,
-          message: "Title and image are required",
+          message: "Title is required",
         },
         { status: 400 }
       );
     }
 
+    // Validate image
+    if (!image) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Image is required",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Validate category
+    if (!category?.trim()) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Category is required",
+        },
+        { status: 400 }
+      );
+    }
+
+    // Create gallery photo
     const gallery = await Gallery.create({
-      title,
+      title: title.trim(),
       image,
+      category: category.trim(),
+      date: date ? new Date(date) : new Date(),
     });
 
     return NextResponse.json(
