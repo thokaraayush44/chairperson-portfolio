@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import HeroSection from "../../components/HeroSection";
 import SectionHeading from "../../components/SectionHeading";
 import { FeaturedWork } from "../../components/FeaturedWork";
@@ -5,7 +7,9 @@ import { JourneySection } from "../../components/JourneySection";
 import { LatestNews } from "../../components/LatestNews";
 import { ContactCta } from "../../components/ContactCta";
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("Home");
+
   return (
     <main className="min-h-screen w-full bg-white">
 
@@ -13,50 +17,50 @@ export default function Home() {
       <HeroSection />
 
       {/* ================= STATS ================= */}
-      <section className="w-full bg-primary-100 py-12">
+      <section className="w-full bg-[#8a1538] py-12">
         <div className="mx-auto flex max-w-[1100px] items-center justify-between px-5 text-center text-white">
 
           {/* Years of Service */}
           <div className="flex-1">
             <div className="text-4xl font-semibold">
-              12+
+              {t("stats.yearsOfServiceValue")}
             </div>
 
             <div className="mt-2 text-sm text-white/80">
-              Years of Service
+              {t("stats.yearsOfService")}
             </div>
           </div>
 
           {/* Projects Completed */}
           <div className="flex-1">
             <div className="text-4xl font-semibold">
-              148
+              {t("stats.projectsCompletedValue")}
             </div>
 
             <div className="mt-2 text-sm text-white/80">
-              Projects Completed
+              {t("stats.projectsCompleted")}
             </div>
           </div>
 
           {/* Wards Covered */}
           <div className="flex-1">
             <div className="text-4xl font-semibold">
-              9
+              {t("stats.wardsCoveredValue")}
             </div>
 
             <div className="mt-2 text-sm text-white/80">
-              Wards Covered
+              {t("stats.wardsCovered")}
             </div>
           </div>
 
           {/* Budget Mobilized */}
           <div className="flex-1">
             <div className="text-4xl font-semibold">
-              NPR 42 Cr
+              {t("stats.budgetMobilizedValue")}
             </div>
 
             <div className="mt-2 text-sm text-white/80">
-              Budget Mobilized
+              {t("stats.budgetMobilized")}
             </div>
           </div>
 
@@ -65,9 +69,9 @@ export default function Home() {
 
       {/* ================= ABOUT ================= */}
       <SectionHeading
-        label="About the Chairperson"
-        title="A Life of Public Service"
-        description="Elected in 2079, [Chairperson Name] has dedicated his tenure to rural infrastructure, healthcare access, and transparent local governance across Kalikot’s nine wards."
+        label={t("about.label")}
+        title={t("about.title")}
+        description={t("about.description")}
       />
 
       {/* ================= FEATURED WORK ================= */}

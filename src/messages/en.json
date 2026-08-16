@@ -1,0 +1,66 @@
+{
+  "Navbar": {
+    "home": "Home",
+    "about": "About",
+    "journey": "Journey",
+    "work": "Work",
+    "news": "News",
+    "contact": "Contact"
+  },
+  "Hero": {
+    "affiliation": "Affiliation: Maoist",
+    "subtitle": "Chairperson, Kalikot District Coordination Committee",
+    "titleFirst": "Hon. Bishnu",
+    "titleLast": "Bahadur Rokaya",
+    "descriptionFirst": "Serving the people of Kalikot with integrity,",
+    "descriptionSecond": "transparency, and dedication.",
+    "viewWork": "View My Work",
+    "contact": "Contact Me"
+  },
+  "Common": {
+    "learnMore": "Learn More",
+    "viewAll": "View All",
+    "readMore": "Read More"
+  },
+ "Home": {
+  "stats": {
+    "yearsOfServiceValue": "12+",
+    "yearsOfService": "Years of Service",
+
+    "projectsCompletedValue": "148",
+    "projectsCompleted": "Projects Completed",
+
+    "wardsCoveredValue": "9",
+    "wardsCovered": "Wards Covered",
+
+    "budgetMobilizedValue": "NPR 42 Cr",
+    "budgetMobilized": "Budget Mobilized"
+  },
+  "about": {
+    "label": "About the Chairperson",
+    "title": "A Life of Public Service",
+    "description": "Elected in 2079, [Chairperson Name] has dedicated his tenure to rural infrastructure, healthcare access, and transparent local governance across Kalikot’s nine wards."
+  }
+},
+"ContactCta": {
+  "title": "Have a Concern or Suggestion for Ward Development?",
+  "description": "Reach out to our office directly — every voice from Kalikot matters to us.",
+  "button": "Contact Me"
+},
+  "Footer": {
+    "description": "Official portfolio of the Chairperson, serving the people of Kalikot.",
+    "quickLinks": "Quick Links",
+    "home": "Home",
+    "about": "About",
+    "timeline": "Timeline",
+    "work": "Work",
+    "news": "News",
+    "contact": "Contact",
+    "campaign": {
+      "title": "Join our campaign",
+      "description": "Sign up for our newsletter for the latest updates and important information.",
+      "joinNow": "Join Now"
+    },
+    "copyright": "© 2026 Office of the Chairperson, Kalikot District Coordination Committee. All rights reserved. This is an official government portfolio website."
+  }
+}

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
+import LanguageSwitch from "@/components/LanguageSwitch";
 
 export default function Navbar() {
+  const t = useTranslations("Navbar");
+
   const pathname = usePathname();
 
   const [scrolled, setScrolled] = useState(false);
@@ -83,71 +85,55 @@ export default function Navbar() {
         <ul className="hidden md:flex items-center gap-8 text-sm">
           <li>
             <Link href="/" className={getLinkClass("/")}>
-              Home
+              {t("home")}
             </Link>
           </li>
 
           <li>
             <Link href="/about" className={getLinkClass("/about")}>
-              About
+              {t("about")}
             </Link>
           </li>
 
           <li>
             <Link href="/journey" className={getLinkClass("/journey")}>
-              Journey
+              {t("journey")}
             </Link>
           </li>
 
           <li>
             <Link href="/work" className={getLinkClass("/work")}>
-              Work
+              {t("work")}
             </Link>
           </li>
 
           <li>
             <Link href="/news" className={getLinkClass("/news")}>
-              News
+              {t("news")}
             </Link>
           </li>
         </ul>
 
         {/* Right Side */}
         <div className="flex items-center gap-3">
-          {/* Language */}
-          <div className="flex items-center gap-0 bg-gray-100 rounded-full px-2 py-1">
-            <button
-              className="
-              px-3 py-1 
-              rounded-full 
-              bg-primary-100 
-              text-white 
-              text-sm 
-              font-semibold
-              "
-            >
-              नेपाली
-            </button>
-
-            <span className="text-sm px-2">EN</span>
-          </div>
+          <LanguageSwitch />
 
           {/* Contact Button */}
           <Link
             href="/contact"
             className="
-            ml-2
-            rounded-full
-            bg-primary-100
-            px-4 py-2
-            text-sm
-            font-medium
-            text-white
-            transition
-            hover:opacity-90
+              ml-2
+              rounded-full
+              bg-[#8a1538]
+              px-4 py-2
+              text-sm
+              font-medium
+              text-white
+              transition
+              hover:opacity-90
             "
           >
-            Contact
+            {t("contact")}
           </Link>
         </div>
       </nav>

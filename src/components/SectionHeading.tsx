@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import { Link } from "@/i18n/navigation";
 import { libreBaskerville } from "@/app/layout";
 
 type Props = {
@@ -32,7 +32,7 @@ export default function SectionHeading({
         </p>
 
         <div className="mt-12">
-          <a
+          <Link
             href="/about"
             aria-label="Read more about the chairperson"
             className="inline-flex items-center gap-1.5 font-semibold text-rose-900"
@@ -45,7 +45,7 @@ export default function SectionHeading({
               height={16}
               className="h-4 w-4 shrink-0"
             />
-          </a>
+          </Link>
         </div>
       </div>
     </section>

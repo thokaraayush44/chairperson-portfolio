@@ -1,7 +1,12 @@
+"use client";
+
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
+
   return (
     <footer className="w-full bg-[#6C1511] text-white">
 
@@ -28,25 +33,23 @@ export default function Footer() {
             </div>
 
             <p className="mt-4 w-full text-[14px] leading-normal text-[#EDEBE6]">
-              Official portfolio of the Chairperson, serving the people of
-              Kalikot.
+              {t("description")}
             </p>
           </div>
 
           {/* Quick Links */}
           <div className="w-full shrink-0 md:w-[171px]">
             <h3 className="mb-3 text-[15px] font-bold leading-normal text-[#C9982A]">
-              Quick Links
+              {t("quickLinks")}
             </h3>
 
             <ul className="space-y-3 text-[14px] leading-normal">
-
               <li>
                 <Link
                   href="/"
                   className="text-[#EDEBE6] transition hover:text-white"
                 >
-                  Home
+                  {t("home")}
                 </Link>
               </li>
 
@@ -55,7 +58,7 @@ export default function Footer() {
                   href="/about"
                   className="text-[#EDEBE6] transition hover:text-white"
                 >
-                  About
+                  {t("about")}
                 </Link>
               </li>
 
@@ -64,7 +67,7 @@ export default function Footer() {
                   href="/journey"
                   className="text-[#EDEBE6] transition hover:text-white"
                 >
-                  Timeline
+                  {t("timeline")}
                 </Link>
               </li>
 
@@ -73,7 +76,7 @@ export default function Footer() {
                   href="/work"
                   className="text-[#EDEBE6] transition hover:text-white"
                 >
-                  Work
+                  {t("work")}
                 </Link>
               </li>
 
@@ -82,7 +85,7 @@ export default function Footer() {
                   href="/news"
                   className="text-[#EDEBE6] transition hover:text-white"
                 >
-                  News
+                  {t("news")}
                 </Link>
               </li>
 
@@ -91,18 +94,16 @@ export default function Footer() {
                   href="/contact"
                   className="text-[#EDEBE6] transition hover:text-white"
                 >
-                  Contact
+                  {t("contact")}
                 </Link>
               </li>
-
             </ul>
           </div>
 
           {/* Contact */}
           <div className="w-full shrink-0 md:w-[259px]">
-
             <h3 className="text-[14px] font-semibold uppercase leading-5 tracking-[0.7px] text-[#C9982A]">
-              Contact
+              {t("contact")}
             </h3>
 
             <div className="mt-4 space-y-3 text-[14px]">
@@ -169,30 +170,27 @@ export default function Footer() {
 
             </div>
           </div>
-
         </div>
 
         {/* Newsletter / Campaign */}
         <div className="w-[280px] shrink-0 rounded-[24px] border border-white/10 bg-white/10 p-[24px]">
 
           <h3 className="text-[16px] font-semibold leading-normal text-[#C9982A]">
-            Join our campaign
+            {t("campaign.title")}
           </h3>
 
           <p className="mt-3 w-[231px] text-[16px] leading-normal text-[#90A1B9]">
-            Sign up for our newsletter for the latest updates and important
-            information.
+            {t("campaign.description")}
           </p>
 
           <Link
             href="/contact"
             className="mt-4 flex h-[58px] w-[232px] items-center justify-center rounded-[18px] bg-white text-[18px] font-semibold text-[#8A1538] transition hover:bg-slate-100"
           >
-            Join Now
+            {t("campaign.joinNow")}
           </Link>
 
         </div>
-
       </div>
 
       {/* Divider */}
@@ -200,9 +198,7 @@ export default function Footer() {
 
       {/* Copyright */}
       <div className="px-5 py-[18px] text-center text-[13px] leading-normal text-[#C9C6BF]">
-        © 2026 Office of the Chairperson, Kalikot District Coordination
-        Committee. All rights reserved. This is an official government
-        portfolio website.
+        {t("copyright")}
       </div>
 
     </footer>

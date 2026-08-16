@@ -1,6 +1,12 @@
+"use client";
+
 import Image from "next/image";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function HeroContent() {
+  const t = useTranslations("Hero");
+
   return (
     <>
       {/* Overlay */}
@@ -33,44 +39,44 @@ export default function HeroContent() {
             />
 
             <span className="text-sm text-white">
-              Affiliation: Maoist
+              {t("affiliation")}
             </span>
           </div>
 
           {/* Subtitle */}
           <p className="mb-4 text-sm font-semibold tracking-wider text-[#D4AF37]">
-            Chairperson, Kalikot District Coordination Committee
+            {t("subtitle")}
           </p>
 
           {/* Title */}
           <h1 className="mb-5 font-serif text-5xl font-semibold leading-[1.15] text-white lg:text-6xl">
-            Hon. Bishnu
+            {t("titleFirst")}
             <br />
-            Bahadur Rokaya
+            {t("titleLast")}
           </h1>
 
           {/* Description */}
           <p className="mb-8 text-base leading-8 text-white/90">
-            Serving the people of Kalikot with integrity,
+            {t("descriptionFirst")}
             <br />
-            transparency, and dedication.
+            {t("descriptionSecond")}
           </p>
 
           {/* Buttons */}
           <div className="flex gap-4">
-            <a
+            <Link
               href="/work"
-              className="rounded-md bg-primary-100 px-6 py-3 font-medium text-white transition hover:bg-primary"
+              className="rounded-md bg-[#8a1538] px-6 py-3 font-medium text-white transition hover:bg-primary"
             >
-              View My Work
-            </a>
+              {t("viewWork")}
+            </Link>
 
-            <a
+            <Link
               href="/contact"
               className="rounded-md border border-black bg-white px-6 py-3 font-semibold text-foreground transition hover:bg-gray-100"
             >
-              Contact Me
-            </a>
+              {t("contact")}
+            </Link>
           </div>
 
         </div>
