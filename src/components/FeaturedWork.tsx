@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ProjectCard } from "./ProjectCard";
 
@@ -23,6 +24,8 @@ type Work = {
 };
 
 export function FeaturedWork() {
+  const t = useTranslations("FeaturedWork");
+
   const [projects, setProjects] = useState<Work[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,13 +55,15 @@ export function FeaturedWork() {
   return (
     <section className="bg-[#F5F2EC] px-0 py-20">
       <div className="mx-auto max-w-6xl">
+        {/* Heading */}
         <h2 className="text-center font-serif text-4xl font-bold text-neutral-900 sm:text-5xl">
-          Featured Work
+          {t("title")}
         </h2>
 
+        {/* Loading */}
         {loading ? (
           <div className="mt-12 text-center text-neutral-600">
-            Loading projects...
+            {t("loading")}
           </div>
         ) : (
           <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -71,12 +76,13 @@ export function FeaturedWork() {
           </div>
         )}
 
+        {/* View All */}
         <div className="mt-10 text-center">
           <Link
             href="/work"
             className="inline-flex items-center gap-1.5 font-semibold text-rose-900"
           >
-            View All Projects
+            {t("viewAll")}
 
             <svg
               width="16"

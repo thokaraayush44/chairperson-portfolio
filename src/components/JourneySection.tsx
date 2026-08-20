@@ -1,28 +1,34 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
 export function JourneySection() {
+  const t = useTranslations("JourneySection");
+
   return (
     <section className="mt-[59px] bg-white px-6 py-20 lg:px-16">
       <div className="mx-auto w-full max-w-[1066px]">
+
         {/* Heading */}
         <div className="mx-auto mb-12 flex max-w-[558px] flex-col items-center gap-4 text-center">
           <p className="text-[13px] font-semibold text-[#C9982A]">
-            Journey of the Chairperson
+            {t("label")}
           </p>
 
           <h2 className="font-serif text-[32px] font-bold leading-tight text-[#221F1A]">
-            Journey Through the Years
+            {t("title")}
           </h2>
 
           <p className="text-[18px] leading-7 text-[#4A483F]">
-            Every milestone reflects dedication, perseverance, and a commitment
-            to serving the community.
+            {t("description")}
           </p>
         </div>
 
         {/* Journey Cards */}
         <div className="relative lg:h-[772px]">
+
           {/* ================= EARLY LIFE ================= */}
           <article
             className="
@@ -36,7 +42,7 @@ export function JourneySection() {
             "
           >
             <div className="flex items-start gap-4">
-              {/* Icon */}
+
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-sm bg-[#E5E9EB]">
                 <span className="text-xl">⌂</span>
               </div>
@@ -47,27 +53,25 @@ export function JourneySection() {
                 </span>
 
                 <h3 className="mt-2 font-serif text-2xl text-black">
-                  Early Life
+                  {t("earlyLife.title")}
                 </h3>
               </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3">
               <p className="text-xs font-bold tracking-[0.1em] text-[#181C1E]">
-                Growing Up in Manma, Kalikot
+                {t("earlyLife.subtitle")}
               </p>
 
               <p className="text-[15px] leading-6 text-[#44474C]">
-                Born and raised in a farming family in Manma; developed an early
-                interest in community welfare through volunteer work with the
-                Youth Red Cross during the 2058 floods.
+                {t("earlyLife.description")}
               </p>
 
               <div className="border-t border-[#C5C6CD] pt-4">
                 <div className="h-[192px] overflow-hidden border border-[#C5C6CD]">
                   <Image
                     src="/images/Journey1.jpg"
-                    alt="Early Life in Manma"
+                    alt={t("earlyLife.imageAlt")}
                     width={800}
                     height={500}
                     className="h-full w-full object-cover"
@@ -90,6 +94,7 @@ export function JourneySection() {
             "
           >
             <div className="flex items-start gap-4">
+
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-sm bg-[#E5E9EB]">
                 <span className="text-xl">🏛</span>
               </div>
@@ -100,27 +105,25 @@ export function JourneySection() {
                 </span>
 
                 <h3 className="mt-2 font-serif text-2xl text-black">
-                  Party Roles
+                  {t("partyRoles.title")}
                 </h3>
               </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3">
               <p className="text-xs font-bold tracking-[0.1em] text-[#181C1E]">
-                Ward Secretary → District Committee Member
+                {t("partyRoles.subtitle")}
               </p>
 
               <p className="text-[15px] leading-6 text-[#44474C]">
-                Served as Ward-level Party Secretary before being elected to the
-                District Party Committee, coordinating grassroots organizing
-                efforts.
+                {t("partyRoles.description")}
               </p>
 
               <div className="flex gap-4 overflow-hidden pt-1">
                 <div className="h-24 w-32 shrink-0 overflow-hidden border border-[#C5C6CD]">
                   <Image
                     src="/images/Journey2.jpg"
-                    alt="Party committee meeting"
+                    alt={t("partyRoles.imageAlt1")}
                     width={640}
                     height={480}
                     className="h-full w-full object-cover"
@@ -130,7 +133,7 @@ export function JourneySection() {
                 <div className="h-24 w-32 shrink-0 overflow-hidden border border-[#C5C6CD]">
                   <Image
                     src="/images/Journey3.jpg"
-                    alt="Community gathering"
+                    alt={t("partyRoles.imageAlt2")}
                     width={640}
                     height={480}
                     className="h-full w-full object-cover"
@@ -153,6 +156,7 @@ export function JourneySection() {
             "
           >
             <div className="flex items-start gap-4">
+
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-sm bg-[#E5E9EB]">
                 <span className="text-xl">👥</span>
               </div>
@@ -163,29 +167,27 @@ export function JourneySection() {
                 </span>
 
                 <h3 className="mt-2 font-serif text-2xl text-black">
-                  Entry into Politics
+                  {t("politics.title")}
                 </h3>
               </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3">
               <p className="text-xs font-bold tracking-[0.1em] text-[#3B475B]">
-                Youth Member, [Party Name]
+                {t("politics.subtitle")}
               </p>
 
               <p className="text-[15px] leading-6 text-[#44474C]">
-                Joined [Party Name] as a youth member, organizing local
-                awareness campaigns on education and rural infrastructure across
-                Kalikot.
+                {t("politics.description")}
               </p>
 
               <div className="flex gap-2 pt-2">
                 <span className="rounded-xl bg-[#E5E9EB] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#44474C]">
-                  Mobilization
+                  {t("politics.mobilization")}
                 </span>
 
                 <span className="rounded-xl bg-[#E5E9EB] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#44474C]">
-                  Advocacy
+                  {t("politics.advocacy")}
                 </span>
               </div>
             </div>
@@ -203,6 +205,7 @@ export function JourneySection() {
             "
           >
             <div className="flex items-start gap-4">
+
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-sm bg-[#FFDAD6]">
                 <span className="text-xl">🚧</span>
               </div>
@@ -213,19 +216,18 @@ export function JourneySection() {
                 </span>
 
                 <h3 className="mt-2 font-serif text-2xl text-black">
-                  Ongoing Initiatives
+                  {t("ongoing.title")}
                 </h3>
               </div>
             </div>
 
             <div className="mt-4 flex flex-col gap-3">
               <p className="text-xs font-bold tracking-[0.1em] text-[#BA1A1A]">
-                Rural Development Projects
+                {t("ongoing.subtitle")}
               </p>
 
               <p className="text-[15px] leading-6 text-[#44474C]">
-                Currently overseeing the Rural Road Blacktopping Project and
-                Drinking Water Supply Scheme across multiple wards of Kalikot.
+                {t("ongoing.description")}
               </p>
 
               {/* Progress */}
@@ -235,7 +237,7 @@ export function JourneySection() {
                 </div>
 
                 <span className="whitespace-nowrap text-xs font-extrabold tracking-wide text-[#BA1A1A]">
-                  75% Complete
+                  {t("ongoing.progress")}
                 </span>
               </div>
             </div>
@@ -248,7 +250,8 @@ export function JourneySection() {
             href="/journey"
             className="inline-flex items-center gap-1 text-[15px] font-semibold text-[#8A1538]"
           >
-            View Journey
+            {t("viewJourney")}
+
             <Image
               src="/icons/Arrow1.svg"
               alt=""

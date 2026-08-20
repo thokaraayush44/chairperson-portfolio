@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 type JourneyItem = {
   year: string;
@@ -16,22 +19,24 @@ type JourneyTimelineProps = {
 };
 
 export default function JourneyTimeline({ items }: JourneyTimelineProps) {
+  const t = useTranslations("JourneyTimeline");
+
   return (
     <section className="bg-white px-6 py-20">
       <div className="mx-auto w-full max-w-6xl">
+
         {/* Heading */}
         <div className="mb-16 text-center">
           <p className="mb-2 text-xs font-medium uppercase tracking-[0.25em] text-[#8A1538]">
-            Journey
+            {t("label")}
           </p>
 
           <h2 className="text-3xl font-semibold text-gray-900 md:text-4xl">
-            A Journey of Public Service
+            {t("title")}
           </h2>
 
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-gray-500">
-            From humble beginnings to public leadership, every step has been
-            shaped by a commitment to serving the people.
+            {t("description")}
           </p>
         </div>
 
@@ -68,6 +73,7 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
 
               return (
                 <div key={index} className="relative">
+
                   {/* Timeline Dot */}
                   <div
                     className={`absolute left-3 top-7 z-20 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-white shadow ${dotColor} md:left-1/2`}
@@ -76,14 +82,18 @@ export default function JourneyTimeline({ items }: JourneyTimelineProps) {
                   {/* Connector */}
                   <div
                     className={`absolute top-[31px] hidden h-px w-9 bg-gray-300 md:block ${
-                      item.side === "left" ? "right-1/2" : "left-1/2"
+                      item.side === "left"
+                        ? "right-1/2"
+                        : "left-1/2"
                     }`}
                   />
 
                   {/* Card */}
                   <div
                     className={`pl-8 md:w-[calc(50%-36px)] md:pl-0 ${
-                      item.side === "left" ? "md:mr-auto" : "md:ml-auto"
+                      item.side === "left"
+                        ? "md:mr-auto"
+                        : "md:ml-auto"
                     }`}
                   >
                     <div

@@ -1,17 +1,25 @@
 import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
+
+type Locale = "en" | "ne";
+
+type NewsTranslation = {
+  locale: Locale;
+  title: string;
+  description: string;
+};
 
 type News = {
   _id: string;
-  title: string;
-  description: string;
+  translations: NewsTranslation[];
   image?: string;
   date: string;
 };
 
 type NewsDetailPageProps = {
   params: Promise<{
+    locale: Locale;
     id: string;
   }>;
 };
@@ -19,13 +27,13 @@ type NewsDetailPageProps = {
 export default async function NewsDetailPage({
   params,
 }: NewsDetailPageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
 
   const response = await fetch(
     `http://localhost:3000/api/news/${id}`,
     {
       cache: "no-store",
-    }
+    },
   );
 
   if (!response.ok) {
@@ -37,6 +45,22 @@ export default async function NewsDetailPage({
   const news: News = result.data;
 
   if (!news) {
+    notFound();
+  }
+
+  // =====================================================
+  // GET CURRENT LANGUAGE TRANSLATION
+  // =====================================================
+
+  const translation =
+    news.translations?.find(
+      (item) => item.locale === locale,
+    ) ||
+    news.translations?.find(
+      (item) => item.locale === "en",
+    );
+
+  if (!translation) {
     notFound();
   }
 
@@ -54,7 +78,7 @@ export default async function NewsDetailPage({
           </Link>
 
           <p className="mt-3 text-sm text-neutral-500">
-            Home &gt; News &gt; {news.title}
+            Home &gt; News &gt; {translation.title}
           </p>
         </div>
 
@@ -66,7 +90,7 @@ export default async function NewsDetailPage({
             <div className="relative h-[400px] w-full">
               <Image
                 src={news.image}
-                alt={news.title}
+                alt={translation.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 1024px"
                 className="object-cover"
@@ -81,22 +105,28 @@ export default async function NewsDetailPage({
               Latest News
             </p>
 
-            <h1 className="mt-3 text-4xl font-serif font-semibold leading-tight text-neutral-950 sm:text-5xl">
-              {news.title}
+            {/* TITLE */}
+            <h1 className="mt-3 font-serif text-4xl font-semibold leading-tight text-neutral-950 sm:text-5xl">
+              {translation.title}
             </h1>
 
+            {/* DATE */}
             <p className="mt-4 text-sm text-neutral-500">
-              {new Date(news.date).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              {new Date(news.date).toLocaleDateString(
+                locale === "ne" ? "ne-NP" : "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )}
             </p>
 
             <div className="my-8 h-px bg-neutral-200" />
 
+            {/* DESCRIPTION */}
             <p className="text-base leading-8 text-neutral-700">
-              {news.description}
+              {translation.description}
             </p>
 
           </div>

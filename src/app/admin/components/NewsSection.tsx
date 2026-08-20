@@ -4,10 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import AddNewsModal from "./AddNewsModal";
 import EditNewsModal from "./EditNewsModal";
 
-type News = {
-  _id: string;
+type NewsTranslation = {
+  locale: "en" | "ne";
   title: string;
   description: string;
+};
+
+type News = {
+  _id: string;
+  translations: NewsTranslation[];
   image?: string;
   date?: string;
 };
@@ -33,7 +38,6 @@ export default function NewsSection() {
 
       console.log("News API response:", data);
 
-      // Make sure news is always an array
       if (Array.isArray(data)) {
         setNews(data);
       } else if (Array.isArray(data.data)) {
@@ -53,10 +57,21 @@ export default function NewsSection() {
     fetchNews();
   }, []);
 
-  const filteredNews = useMemo(() => {
-    return news.filter((item) =>
-      item.title.toLowerCase().includes(search.toLowerCase()),
+  // Get English translation
+  function getEnglishTranslation(item: News) {
+    return item.translations?.find(
+      (translation) => translation.locale === "en",
     );
+  }
+
+  const filteredNews = useMemo(() => {
+    return news.filter((item) => {
+      const english = getEnglishTranslation(item);
+
+      return english?.title
+        ?.toLowerCase()
+        .includes(search.toLowerCase());
+    });
   }, [news, search]);
 
   async function handleDelete(id: string) {
@@ -160,84 +175,88 @@ export default function NewsSection() {
             Loading news...
           </div>
         ) : filteredNews.length === 0 ? (
-          /* Empty State */
           <div className="p-8 text-center text-sm text-[#4a483f]">
             No news found.
           </div>
         ) : (
-          /* News List */
-          filteredNews.map((item) => (
-            <div
-              key={item._id}
-              className="
-                border-t
-                border-[#e1d0cf]
-                bg-white
-                px-5
-                py-4
-                md:grid
-                md:min-h-[88px]
-                md:grid-cols-[64px_280px_1fr_120px_176px]
-                md:items-center
-                md:gap-3
-              "
-            >
-              {/* Image */}
-              <div className="mb-3 md:mb-0">
-                {item.image ? (
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="h-14 w-14 rounded-[8px] object-cover"
-                  />
-                ) : (
-                  <div className="h-14 w-14 rounded-[8px] bg-[#c8c6bf]" />
-                )}
-              </div>
+          filteredNews.map((item) => {
+            const english = getEnglishTranslation(item);
 
-              {/* Title */}
-              <div className="mb-2 md:mb-0">
-                <p className="text-[14px] font-semibold text-[#221f1a]">
-                  {item.title}
+            return (
+              <div
+                key={item._id}
+                className="
+                  border-t
+                  border-[#e1d0cf]
+                  bg-white
+                  px-5
+                  py-4
+                  md:grid
+                  md:min-h-[88px]
+                  md:grid-cols-[64px_280px_1fr_120px_176px]
+                  md:items-center
+                  md:gap-3
+                "
+              >
+                {/* Image */}
+                <div className="mb-3 md:mb-0">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={english?.title || "News image"}
+                      className="h-14 w-14 rounded-[8px] object-cover"
+                    />
+                  ) : (
+                    <div className="h-14 w-14 rounded-[8px] bg-[#c8c6bf]" />
+                  )}
+                </div>
+
+                {/* Title */}
+                <div className="mb-2 md:mb-0">
+                  <p className="text-[14px] font-semibold text-[#221f1a]">
+                    {english?.title || "-"}
+                  </p>
+                </div>
+
+                {/* Description */}
+                <p className="mb-3 text-[13px] text-[#4a483f] md:mb-0">
+                  {english?.description || "-"}
                 </p>
+
+                {/* Date */}
+                <p className="mb-3 text-[13px] text-[#4a483f] md:mb-0">
+                  {formatDate(item.date)}
+                </p>
+
+                {/* Actions */}
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleEdit(item._id)}
+                    className="rounded-[6px] border border-[#0b1f3a] bg-white px-[14px] py-2 text-[13px] font-semibold text-[#0b1f3a]"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(item._id)}
+                    className="rounded-[6px] border border-[#b3261e] bg-white px-[14px] py-2 text-[13px] font-semibold text-[#b3261e]"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-
-              {/* Description */}
-              <p className="mb-3 text-[13px] text-[#4a483f] md:mb-0">
-                {item.description}
-              </p>
-
-              {/* Date */}
-              <p className="mb-3 text-[13px] text-[#4a483f] md:mb-0">
-                {formatDate(item.date)}
-              </p>
-
-              {/* Actions */}
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleEdit(item._id)}
-                  className="rounded-[6px] border border-[#0b1f3a] bg-white px-[14px] py-2 text-[13px] font-semibold text-[#0b1f3a]"
-                >
-                  Edit
-                </button>
-
-                <button
-                  onClick={() => handleDelete(item._id)}
-                  className="rounded-[6px] border border-[#b3261e] bg-white px-[14px] py-2 text-[13px] font-semibold text-[#b3261e]"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
+
       {showAddModal && (
         <AddNewsModal
           onClose={() => setShowAddModal(false)}
           onSuccess={fetchNews}
         />
       )}
+
       {editingNews && (
         <EditNewsModal
           news={editingNews}

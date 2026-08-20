@@ -3,26 +3,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 const speeches = [
   {
     id: "annual-budget-address",
-    date: "JUL 12, 2026",
-    title: "Annual Budget Address to the District Assembly",
+    translationKey: "annualBudgetAddress",
     image: "/images/news1.jpg",
     href: "/news/annual-budget-address",
   },
   {
     id: "province-development-speech",
-    date: "JUN 15, 2026",
-    title: "Speech at Karnali Province Development Forum",
+    translationKey: "provinceDevelopmentSpeech",
     image: "/images/speeches1.jpg",
     href: "/news/province-development-speech",
   },
   {
     id: "health-post-inauguration",
-    date: "JUL 20, 2026",
-    title: "Health Post Inauguration Remarks, Ward 9",
+    translationKey: "healthPostInauguration",
     image: "/images/speeches2.jpg",
     href: "/news/health-post-inauguration",
   },
@@ -37,6 +35,8 @@ type GalleryPhoto = {
 };
 
 export function SpeechesSection() {
+  const t = useTranslations("SpeechesSection");
+
   const [gallery, setGallery] = useState<GalleryPhoto[]>([]);
   const [loadingGallery, setLoadingGallery] = useState(true);
 
@@ -65,10 +65,11 @@ export function SpeechesSection() {
   return (
     <section className="mt-20 bg-white">
       <div className="mx-auto w-full max-w-7xl px-9 sm:px-6 lg:px-8">
+
         {/* Speeches Section */}
         <div className="mb-8">
           <h2 className="font-serif text-4xl font-semibold tracking-[0.02em] text-slate-950">
-            Speeches & Public Appearances
+            {t("title")}
           </h2>
         </div>
 
@@ -83,7 +84,9 @@ export function SpeechesSection() {
                   <div className="aspect-[5/3] w-full transition duration-300 group-hover:scale-[1.09]">
                     <Image
                       src={speech.image}
-                      alt={speech.title}
+                      alt={t(
+                        `cards.${speech.translationKey}.title`
+                      )}
                       fill
                       className="object-cover"
                       sizes="(min-width: 1280px) 430px, (min-width: 768px) 33vw, 100vw"
@@ -109,13 +112,22 @@ export function SpeechesSection() {
                 </div>
 
                 <div className="space-y-3 px-5 pb-6 pt-5">
+                  {/* Date */}
                   <p className="text-xs font-semibold uppercase tracking-[0.3em] text-rose-900/80">
-                    {speech.date}
+                    {t(`cards.${speech.translationKey}.date`)}
                   </p>
 
+                  {/* Title */}
                   <h3 className="text-lg font-semibold text-slate-950">
-                    {speech.title}
+                    {t(`cards.${speech.translationKey}.title`)}
                   </h3>
+
+                  {/* Description */}
+                  <p className="text-sm leading-6 text-slate-600">
+                    {t(
+                      `cards.${speech.translationKey}.description`
+                    )}
+                  </p>
                 </div>
               </Link>
             </article>
@@ -126,11 +138,11 @@ export function SpeechesSection() {
         <div className="mt-16">
           <div className="mb-8">
             <h3 className="font-serif text-3xl font-semibold tracking-[0.02em] text-slate-950">
-              Press Photo Gallery
+              {t("gallery.title")}
             </h3>
 
             <p className="mt-2 text-sm text-slate-600">
-              Click any photo to view full size
+              {t("gallery.description")}
             </p>
           </div>
 
@@ -138,11 +150,11 @@ export function SpeechesSection() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {loadingGallery ? (
               <div className="col-span-full py-10 text-center text-sm text-slate-600">
-                Loading gallery...
+                {t("gallery.loading")}
               </div>
             ) : gallery.length === 0 ? (
               <div className="col-span-full py-10 text-center text-sm text-slate-600">
-                No photos available.
+                {t("gallery.empty")}
               </div>
             ) : (
               gallery.map((photo) => (
@@ -175,17 +187,22 @@ export function SpeechesSection() {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div>
                 <p className="text-xs font-semibold text-rose-900/80">
-                  Media & Press Inquiries
+                  {t("media.title")}
                 </p>
 
                 <p className="mt-1 font-semibold text-slate-900">
-                  [Press/Media Officer Name], Media Coordinator
+                  {t("media.officer")}
                 </p>
               </div>
 
               <div className="space-y-2 text-sm text-slate-900 sm:text-right">
-                <p>Phone: +977-98XXXXXXXX</p>
-                <p>Email: press@kalikot.gov.np</p>
+                <p>
+                  {t("media.phone")}: +977-98XXXXXXXX
+                </p>
+
+                <p>
+                  {t("media.email")}: press@kalikot.gov.np
+                </p>
               </div>
             </div>
           </div>

@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 type Work = {
   projectId: string;
@@ -20,6 +23,8 @@ type Work = {
 };
 
 export function ProjectCard({ project }: { project: Work }) {
+  const t = useTranslations("ProjectCard");
+
   return (
     <Link href={`/work/${project.projectId}`}>
       <article className="group overflow-hidden rounded-3xl border border-neutral-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
@@ -28,11 +33,13 @@ export function ProjectCard({ project }: { project: Work }) {
             src={project.image}
             alt={project.title}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition duration-300 group-hover:scale-105"
           />
         </div>
 
         <div className="p-5">
+          {/* Backend data - don't translate yet */}
           <p className="text-xs font-semibold uppercase tracking-wide text-rose-900">
             {project.category} · {project.ward}
           </p>
@@ -45,12 +52,13 @@ export function ProjectCard({ project }: { project: Work }) {
             {project.description}
           </p>
 
+          {/* Static UI */}
           <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-rose-900 transition-colors group-hover:text-rose-950">
-            View Details
+            {t("viewDetails")}
 
             <Image
               src="/icons/Arrow1.svg"
-              alt="arrow"
+              alt=""
               width={16}
               height={12}
               className="h-4 w-4"

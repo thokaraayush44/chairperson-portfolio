@@ -11,9 +11,20 @@ export default function AddNewsModal({
   onClose,
   onSuccess,
 }: AddNewsModalProps) {
+  // English
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  // Nepali
+  const [nepaliTitle, setNepaliTitle] = useState("");
+  const [nepaliDescription, setNepaliDescription] = useState("");
+
+  // Cloudinary URL
   const [image, setImage] = useState("");
+
+  // Selected file before uploading
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [imageName, setImageName] = useState("");
   const [date, setDate] = useState("");
   const [saving, setSaving] = useState(false);
@@ -23,29 +34,70 @@ export default function AddNewsModal({
 
     if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image file.");
+      return;
+    }
+
+    setImageFile(file);
     setImageName(file.name);
 
-    // Convert image to base64 temporarily.
-    // This works with your current image:string field.
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImage(reader.result as string);
-    };
-
-    reader.readAsDataURL(file);
+    // Reset previous Cloudinary URL if user changes image
+    setImage("");
   }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!title.trim() || !description.trim() || !image || !date) {
-      alert("Please fill in all fields.");
+    // Validate all required fields
+    if (
+      !title.trim() ||
+      !description.trim() ||
+      !nepaliTitle.trim() ||
+      !nepaliDescription.trim() ||
+      !imageFile ||
+      !date
+    ) {
+      alert("Please fill in all fields in both languages.");
       return;
     }
 
     try {
       setSaving(true);
+
+      // =====================================================
+      // STEP 1: Upload image to Cloudinary
+      // =====================================================
+
+      const formData = new FormData();
+
+      formData.append("image", imageFile);
+      formData.append("folder", "news");
+
+      const uploadResponse = await fetch("/api/cloudinary/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const uploadData = await uploadResponse.json();
+
+      if (!uploadResponse.ok || !uploadData.success) {
+        throw new Error(uploadData.error || "Image upload failed");
+      }
+
+      const imageUrl = uploadData.url;
+
+      if (!imageUrl) {
+        throw new Error("Cloudinary did not return an image URL");
+      }
+
+      setImage(imageUrl);
+
+      console.log("Cloudinary image uploaded:", imageUrl);
+
+      // =====================================================
+      // STEP 2: Create News
+      // =====================================================
 
       const response = await fetch("/api/news", {
         method: "POST",
@@ -53,9 +105,19 @@ export default function AddNewsModal({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title,
-          description,
-          image,
+          translations: [
+            {
+              locale: "en",
+              title: title.trim(),
+              description: description.trim(),
+            },
+            {
+              locale: "ne",
+              title: nepaliTitle.trim(),
+              description: nepaliDescription.trim(),
+            },
+          ],
+          image: imageUrl,
           date,
         }),
       });
@@ -65,6 +127,10 @@ export default function AddNewsModal({
       if (!response.ok) {
         throw new Error(data.message || "Failed to create news");
       }
+
+      // =====================================================
+      // SUCCESS
+      // =====================================================
 
       alert("News created successfully!");
 
@@ -76,7 +142,7 @@ export default function AddNewsModal({
       alert(
         error instanceof Error
           ? error.message
-          : "Failed to create news"
+          : "Failed to create news",
       );
     } finally {
       setSaving(false);
@@ -92,7 +158,7 @@ export default function AddNewsModal({
         }
       }}
     >
-      <div className="w-full max-w-[560px] rounded-[16px] bg-white px-[40px] py-[36px] shadow-[0px_12px_32px_0px_rgba(0,0,0,0.18)]">
+      <div className="max-h-[90vh] w-full max-w-[560px] overflow-y-auto rounded-[16px] bg-white px-[40px] py-[36px] shadow-[0px_12px_32px_0px_rgba(0,0,0,0.18)]">
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-6"
@@ -113,72 +179,160 @@ export default function AddNewsModal({
             </button>
           </div>
 
-          {/* Title */}
-          <div className="flex flex-col gap-[6px]">
-            <label
-              htmlFor="news-title"
-              className="text-[13px] font-semibold text-[#221f1a]"
-            >
-              Title
-            </label>
+          {/* ================================================= */}
+          {/* ENGLISH */}
+          {/* ================================================= */}
 
-            <input
-              id="news-title"
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Chairperson Inaugurates New Health Post"
-              className="
-                h-[44px]
-                w-full
-                rounded-[8px]
-                border
-                border-[#e1d0cf]
-                bg-white
-                px-[14px]
-                text-[14px]
-                text-[#221f1a]
-                outline-none
-                placeholder:text-[#4a483f]
-                focus:border-[#8a1538]
-              "
-            />
+          <div className="border-b border-[#e1d0cf] pb-5">
+            <h3 className="mb-4 text-[16px] font-bold text-[#8a1538]">
+              English
+            </h3>
+
+            {/* English Title */}
+            <div className="mb-4 flex flex-col gap-[6px]">
+              <label
+                htmlFor="news-title-en"
+                className="text-[13px] font-semibold text-[#221f1a]"
+              >
+                Title
+              </label>
+
+              <input
+                id="news-title-en"
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g. Chairperson Inaugurates New Health Post"
+                className="
+                  h-[44px]
+                  w-full
+                  rounded-[8px]
+                  border
+                  border-[#e1d0cf]
+                  bg-white
+                  px-[14px]
+                  text-[14px]
+                  text-[#221f1a]
+                  outline-none
+                  placeholder:text-[#4a483f]
+                  focus:border-[#8a1538]
+                "
+              />
+            </div>
+
+            {/* English Description */}
+            <div className="flex flex-col gap-[6px]">
+              <label
+                htmlFor="news-description-en"
+                className="text-[13px] font-semibold text-[#221f1a]"
+              >
+                Description
+              </label>
+
+              <textarea
+                id="news-description-en"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Write a short summary of the news update..."
+                className="
+                  h-[96px]
+                  w-full
+                  resize-none
+                  rounded-[8px]
+                  border
+                  border-[#e1d0cf]
+                  bg-white
+                  px-[14px]
+                  py-[12px]
+                  text-[14px]
+                  text-[#221f1a]
+                  outline-none
+                  placeholder:text-[#4a483f]
+                  focus:border-[#8a1538]
+                "
+              />
+            </div>
           </div>
 
-          {/* Description */}
-          <div className="flex flex-col gap-[6px]">
-            <label
-              htmlFor="news-description"
-              className="text-[13px] font-semibold text-[#221f1a]"
-            >
-              Description
-            </label>
+          {/* ================================================= */}
+          {/* NEPALI */}
+          {/* ================================================= */}
 
-            <textarea
-              id="news-description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Write a short summary of the news update..."
-              className="
-                h-[96px]
-                w-full
-                resize-none
-                rounded-[8px]
-                border
-                border-[#e1d0cf]
-                bg-white
-                px-[14px]
-                py-[12px]
-                text-[14px]
-                text-[#221f1a]
-                outline-none
-                placeholder:text-[#4a483f]
-                focus:border-[#8a1538]
-              "
-            />
+          <div className="border-b border-[#e1d0cf] pb-5">
+            <h3 className="mb-4 text-[16px] font-bold text-[#8a1538]">
+              नेपाली
+            </h3>
+
+            {/* Nepali Title */}
+            <div className="mb-4 flex flex-col gap-[6px]">
+              <label
+                htmlFor="news-title-ne"
+                className="text-[13px] font-semibold text-[#221f1a]"
+              >
+                शीर्षक
+              </label>
+
+              <input
+                id="news-title-ne"
+                type="text"
+                value={nepaliTitle}
+                onChange={(e) => setNepaliTitle(e.target.value)}
+                placeholder="समाचारको शीर्षक लेख्नुहोस्"
+                className="
+                  h-[44px]
+                  w-full
+                  rounded-[8px]
+                  border
+                  border-[#e1d0cf]
+                  bg-white
+                  px-[14px]
+                  text-[14px]
+                  text-[#221f1a]
+                  outline-none
+                  placeholder:text-[#4a483f]
+                  focus:border-[#8a1538]
+                "
+              />
+            </div>
+
+            {/* Nepali Description */}
+            <div className="flex flex-col gap-[6px]">
+              <label
+                htmlFor="news-description-ne"
+                className="text-[13px] font-semibold text-[#221f1a]"
+              >
+                विवरण
+              </label>
+
+              <textarea
+                id="news-description-ne"
+                value={nepaliDescription}
+                onChange={(e) => setNepaliDescription(e.target.value)}
+                placeholder="समाचारको छोटो विवरण लेख्नुहोस्"
+                className="
+                  h-[96px]
+                  w-full
+                  resize-none
+                  rounded-[8px]
+                  border
+                  border-[#e1d0cf]
+                  bg-white
+                  px-[14px]
+                  py-[12px]
+                  text-[14px]
+                  text-[#221f1a]
+                  outline-none
+                  placeholder:text-[#4a483f]
+                  focus:border-[#8a1538]
+                "
+              />
+            </div>
           </div>
 
-          {/* Image */}
+          {/* ================================================= */}
+          {/* IMAGE */}
+          {/* ================================================= */}
+
           <div className="flex flex-col gap-[6px]">
             <label
               htmlFor="news-image"
@@ -241,7 +395,10 @@ export default function AddNewsModal({
             />
           </div>
 
-          {/* Date */}
+          {/* ================================================= */}
+          {/* DATE */}
+          {/* ================================================= */}
+
           <div className="flex flex-col gap-[6px]">
             <label
               htmlFor="news-date"

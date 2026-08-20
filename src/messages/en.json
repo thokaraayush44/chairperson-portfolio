@@ -42,10 +42,57 @@
     "description": "Elected in 2079, [Chairperson Name] has dedicated his tenure to rural infrastructure, healthcare access, and transparent local governance across Kalikot’s nine wards."
   }
 },
+"FeaturedWork": {
+  "title": "Featured Work",
+  "loading": "Loading projects...",
+  "viewAll": "View All Projects"
+},
+"JourneySection": {
+  "label": "Journey of the Chairperson",
+  "title": "Journey Through the Years",
+  "description": "Every milestone reflects dedication, perseverance, and a commitment to serving the community.",
+  "earlyLife": {
+    "title": "Early Life",
+    "subtitle": "Growing Up in Manma, Kalikot",
+    "description": "Born and raised in a farming family in Manma; developed an early interest in community welfare through volunteer work with the Youth Red Cross during the 2058 floods.",
+    "imageAlt": "Early Life in Manma"
+  },
+  "partyRoles": {
+    "title": "Party Roles",
+    "subtitle": "Ward Secretary → District Committee Member",
+    "description": "Served as Ward-level Party Secretary before being elected to the District Party Committee, coordinating grassroots organizing efforts.",
+    "imageAlt1": "Party committee meeting",
+    "imageAlt2": "Community gathering"
+  },
+  "politics": {
+    "title": "Entry into Politics",
+    "subtitle": "Youth Member, [Party Name]",
+    "description": "Joined [Party Name] as a youth member, organizing local awareness campaigns on education and rural infrastructure across Kalikot.",
+    "mobilization": "Mobilization",
+    "advocacy": "Advocacy"
+  },
+  "ongoing": {
+    "title": "Ongoing Initiatives",
+    "subtitle": "Rural Development Projects",
+    "description": "Currently overseeing the Rural Road Blacktopping Project and Drinking Water Supply Scheme across multiple wards of Kalikot.",
+    "progress": "75% Complete"
+  },
+  "viewJourney": "View Journey"
+},
+"LatestNews": {
+  "title": "Latest News",
+  "viewAll": "View All News",
+  "loading": "Loading news...",
+  "label": "NEWS",
+  "viewDetails": "View Details"
+},
 "ContactCta": {
   "title": "Have a Concern or Suggestion for Ward Development?",
   "description": "Reach out to our office directly — every voice from Kalikot matters to us.",
   "button": "Contact Me"
+},
+"ProjectCard": {
+  "viewDetails": "View Details"
 },
   "Footer": {
     "description": "Official portfolio of the Chairperson, serving the people of Kalikot.",
@@ -62,5 +109,266 @@
       "joinNow": "Join Now"
     },
     "copyright": "© 2026 Office of the Chairperson, Kalikot District Coordination Committee. All rights reserved. This is an official government portfolio website."
+  },
+  "WorkProjects": {
+  "label": "Our Work",
+  "title": "Featured Projects",
+  "loading": "Loading projects...",
+  "error": "Failed to load projects.",
+  "noProjects": "No projects match the selected filters.",
+  "filters": {
+    "all": "All",
+    "allWards": "All Wards",
+    "wardLocation": "Ward / Location",
+    "status": "Status",
+    "ongoing": "Ongoing",
+    "completed": "Completed"
   }
+},
+  "About": {
+    "pageTitle": "About Hon. Bishnu Bahadur Rokaya",
+    "breadcrumb": "Home > About"
+  },
+  "Work": {
+    "pageTitle": "Our Work",
+    "breadcrumb": "Home > Work"
+  },
+  "Journey": {
+    "pageTitle": "Political Journey",
+    "breadcrumb": "Home > Political Journey",
+
+    "items": {
+      "earlyLife": {
+        "category": "Early Life",
+        "title": "Early Life",
+        "description": "Growing up in a farming family in the mountains, developed an early interest in community welfare."
+      },
+
+      "politics": {
+        "category": "Education",
+        "title": "Entry into Politics",
+        "description": "Joined political activities and began grassroots community organizing."
+      },
+
+      "partyRoles": {
+        "category": "Party Roles",
+        "title": "Party Roles",
+        "description": "Served in various party roles and became increasingly involved in district-level activities."
+      },
+
+      "localElections": {
+        "category": "Local Elections",
+        "title": "Local Elections",
+        "description": "Elected as a local representative with a focus on roads, health and water access."
+      },
+
+      "currentTerm": {
+        "category": "Current Term",
+        "title": "Current Term",
+        "description": "Elected Chairperson and continued working on infrastructure, healthcare and transparent governance."
+      },
+
+      "initiatives": {
+        "category": "Ongoing Initiatives",
+        "title": "Ongoing Initiatives",
+        "description": "Continuing rural development, healthcare and livelihood projects across the community."
+      }
+    }
+  },
+  "News": {
+  "pageTitle": "News & Media",
+  "breadcrumb": "Home > News",
+  "latestNews": "Latest News",
+  "loading": "Loading news...",
+  "noNews": "No news available.",
+  "errors": {
+    "loadFailed": "Failed to load news."
+  }
+},
+"JourneyTimeline": {
+  "label": "Journey",
+  "title": "A Journey of Public Service",
+  "description": "From humble beginnings to public leadership, every step has been shaped by a commitment to serving the people."
+},
+"Biography": {
+    "label": "Early Life & Background",
+    "title": "A Life Rooted in Kalikot",
+    "paragraph1": "Born in a small farming household in Ward 3 of Kalikot, [Chairperson Name] grew up amid the district’s rugged hills, where access to schools, health posts, and roads was scarce. His father worked as a school teacher and his mother managed the family’s land, instilling in him early values of discipline, service, and community responsibility.",
+    "paragraph2": "As the eldest of four siblings, he took on early responsibility for his family, walking several hours daily to attend school in the neighboring ward. These formative years, shaped by hardship and resilience, would later define his commitment to rural development and equitable access to public services.",
+    "paragraph3": "His early exposure to the everyday struggles of Kalikot’s farmers and laborers laid the foundation for a lifelong dedication to grassroots governance and community-driven development.",
+    "portrait": "Portrait Photograph"
+  },
+  "VisionIdeology": {
+  "quote": "True development begins when every ward, however remote, has a voice in its own future. My work is guided by transparency, equity, and the belief that public service is a trust placed in us by the people of Kalikot.",
+  "author": "— Hon. Bishnu Bahadur Rokaya, Chairperson, Kalikot DCC"
+},
+"Education": {
+  "title": "Education",
+  "items": {
+    "masters": {
+      "title": "Master of Arts in Rural Development",
+      "subtitle": "Tribhuvan University",
+      "year": "2071"
+    },
+    "bachelors": {
+      "title": "Bachelor of Arts, Political Science",
+      "subtitle": "Mahendra Multiple Campus, Surkhet",
+      "year": "2066"
+    },
+    "higherSecondary": {
+      "title": "Higher Secondary Education (10+2)",
+      "subtitle": "Kalikot Secondary School",
+      "year": "2062"
+    }
+  }
+},
+"Languages": {
+  "title": "Languages Spoken",
+  "items": {
+    "nepali": "Nepali",
+    "english": "English",
+    "khas": "Khas",
+    "hindi": "Hindi"
+  }
+},
+"Milestones": {
+  "title": "Early Milestones",
+  "cards": {
+    "youthVolunteer": {
+      "title": "Youth Volunteer Corps",
+      "desc": "Organized youth-led sanitation and literacy campaigns across Ward 3 during his college years.",
+      "badge": "Y"
+    },
+    "floodRelief": {
+      "title": "Flood Relief Coordination",
+      "desc": "Led local relief efforts distributing food and shelter after the 2070 flash floods in Kalikot.",
+      "badge": "R"
+    },
+    "farmersCooperative": {
+      "title": "Farmers’ Cooperative",
+      "desc": "Co-founded a cooperative connecting smallholder farmers to fair markets across the district.",
+      "badge": "F"
+    },
+    "schoolCommittee": {
+      "title": "School Committee Secretary",
+      "desc": "Served the local school management committee, improving enrollment and infrastructure.",
+      "badge": "S"
+    }
+  }
+},
+"Awards": {
+  "title": "Awards & Recognition",
+  "items": {
+    "governance": {
+      "title": "Best Local Governance Award",
+      "subtitle": "Ministry of Federal Affairs and General Administration",
+      "year": "2081"
+    },
+    "ruralDevelopment": {
+      "title": "Outstanding Rural Development Leadership",
+      "subtitle": "National Association of Rural Municipalities Nepal",
+      "year": "2080"
+    },
+    "transparency": {
+      "title": "Transparency in Public Office Recognition",
+      "subtitle": "Transparency International Nepal Chapter",
+      "year": "2078"
+    },
+    "communityService": {
+      "title": "Community Service Excellence Medal",
+      "subtitle": "Kalikot District Administration Office",
+      "year": "2079"
+    }
+  }
+},
+"SpeechesSection": {
+  "title": "Speeches",
+  "gallery": {
+    "title": "Press Gallery",
+    "description": "Photos and media from official programs and events.",
+    "loading": "Loading gallery..."
+  },
+  "media": {
+    "officer": "Media Officer",
+    "phone": "Phone",
+    "email": "Email"
+  },
+  "cards": {
+    "annualBudgetAddress": {
+      "title": "Annual Budget Address to the District Assembly",
+      "date": "JUL 12, 2026",
+      "description": "Address delivered during the annual budget session of the District Assembly."
+    },
+    "provinceDevelopmentSpeech": {
+      "title": "Province Development Speech",
+      "date": "JUN 28, 2026",
+      "description": "Speech highlighting development priorities and programs for the district."
+    },
+    "healthPostInauguration": {
+      "title": "Health Post Inauguration",
+      "date": "MAY 15, 2026",
+      "description": "Address delivered during the inauguration of a new health post."
+    }
+  }
+  },
+  "gallery": {
+    "title": "Press Photo Gallery",
+    "description": "Explore photos from events, meetings, and public activities.",
+    "loading": "Loading gallery...",
+    "empty": "No gallery photos available."
+  },
+
+  "media": {
+    "title": "MEDIA & PRESS",
+    "officer": "Press & Media Contact",
+    "phone": "Phone",
+    "email": "Email"
+  }
+  },
+  "Contact": {
+  "pageTitle": "Contact",
+  "breadcrumb": "Home > Contact",
+
+  "officeContactInformation": "Office Contact Information",
+
+  "description": "Reach the Chairperson's Office for inquiries, public meetings, or support services. Our team is available during regular office hours to serve residents and stakeholders across Kalikot.",
+
+  "officeAddress": {
+    "label": "Office Address",
+    "value": "Chairperson's Office, Kalikot District Coordination Committee, Manma, Ward No. 4, Kalikot"
+  },
+
+  "officePhone": {
+    "label": "Office Phone",
+    "value": "+977-89-420123"
+  },
+
+  "publicEmail": {
+    "label": "Public Email",
+    "value": "chairperson@kalikot.gov.np"
+  },
+
+  "officeHours": {
+    "label": "Office Hours",
+    "value": "Sunday – Friday, 10:00 AM – 5:00 PM",
+    "meetingHours": "Public meeting hours: 11:00 AM – 1:00 PM"
+  },
+
+  "secretaryContact": {
+    "label": "Secretary / Staff Contact",
+    "value": "Personal Secretary, [Secretary Name] – +977-98XXXXXXXX"
+  },
+
+  "googleMapsEmbed": "Google Maps Embed",
+
+  "officeLocation": "Office Location",
+
+  "mapSubtitle": "Manma, Kalikot District Coordination Committee Office",
+
+  "mapIframeTitle": "Kalikot Office Location"
 }
+}
+
+
+
+

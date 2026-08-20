@@ -1,4 +1,6 @@
 import React from "react";
+import { getTranslations } from "next-intl/server";
+
 import { Container } from "@/components/Container";
 import { PageTitleBanner } from "@/components/PageTitleBanner";
 import { BiographySection } from "@/components/BiographySection";
@@ -8,12 +10,17 @@ import { LanguageSection } from "@/components/LanguageSection";
 import { MilestoneSection } from "@/components/MilestoneSection";
 import { AwardsSection } from "@/components/AwardsSection";
 
-const page = () => {
+const Page = async () => {
+  const t = await getTranslations("About");
+
   return (
     <main className="pt-18.5 flex flex-col gap-[10px]">
-
       <Container className="flex flex-col">
-        <PageTitleBanner title="About Hon. Bishnu Bahadur Rokaya" breadcrumb="Home > About" />
+        <PageTitleBanner
+          title={t("pageTitle")}
+          breadcrumb={t("breadcrumb")}
+        />
+
         <BiographySection />
         <VisionIdeology />
         <EducationSection />
@@ -25,4 +32,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

@@ -1,730 +1,866 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-type Work = {
-  _id: string;
-  projectId: string;
+type GalleryTranslation = {
+  locale: "en" | "ne";
   title: string;
-  description?: string;
-  image?: string;
-  galleryImages?: string[];
-  category?: string;
-  ward?: string;
-  status: "Ongoing" | "Completed";
-  completedDate?: string;
-  location: string;
-  eventTypes: string;
-  eventCategory: string;
-  problem: string;
-  action: string;
-  outcome: string;
+  category: string;
 };
 
-type EditWorkEntryModalProps = {
-  work: Work;
+type Gallery = {
+  _id: string;
+  translations: GalleryTranslation[];
+  image: string;
+  date?: string;
+};
+
+type EditGalleryModalProps = {
+  gallery: Gallery | null;
+  isOpen: boolean;
   onClose: () => void;
-  onSave: (work: Work) => void;
+  onUpdated: (updatedGallery: Gallery) => void;
 };
 
-export default function EditWorkEntryModal({
-  work,
+export default function EditGalleryModal({
+  gallery,
+  isOpen,
   onClose,
-  onSave,
-}: EditWorkEntryModalProps) {
-  const [form, setForm] = useState<Work>(work);
+  onUpdated,
+}: EditGalleryModalProps) {
+  // =====================================================
+  // ENGLISH
+  // =====================================================
 
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    work.image || null,
-  );
-
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [englishTitle, setEnglishTitle] = useState("");
+  const [englishCategory, setEnglishCategory] =
+    useState("");
 
   // =====================================================
-  // KEEP FORM UPDATED
+  // NEPALI
+  // =====================================================
+
+  const [nepaliTitle, setNepaliTitle] = useState("");
+  const [nepaliCategory, setNepaliCategory] =
+    useState("");
+
+  // =====================================================
+  // IMAGE
+  // =====================================================
+
+  // Current Cloudinary URL
+  const [image, setImage] = useState("");
+
+  // Preview URL
+  const [imagePreview, setImagePreview] =
+    useState("");
+
+  // New selected image
+  const [selectedImage, setSelectedImage] =
+    useState<File | null>(null);
+
+  // =====================================================
+  // DATE
+  // =====================================================
+
+  const [date, setDate] = useState("");
+
+  // =====================================================
+  // STATUS
+  // =====================================================
+
+  const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] =
+    useState(false);
+
+  const [error, setError] = useState("");
+
+  const fileInputRef =
+    useRef<HTMLInputElement>(null);
+
+  // =====================================================
+  // LOAD GALLERY DATA
   // =====================================================
 
   useEffect(() => {
-    setForm(work);
-    setImagePreview(work.image || null);
+    if (!gallery) return;
+
+    // ---------------------------------------------------
+    // FIND ENGLISH TRANSLATION
+    // ---------------------------------------------------
+
+    const english =
+      gallery.translations?.find(
+        (translation) =>
+          translation.locale === "en",
+      );
+
+    // ---------------------------------------------------
+    // FIND NEPALI TRANSLATION
+    // ---------------------------------------------------
+
+    const nepali =
+      gallery.translations?.find(
+        (translation) =>
+          translation.locale === "ne",
+      );
+
+    // ---------------------------------------------------
+    // ENGLISH
+    // ---------------------------------------------------
+
+    setEnglishTitle(
+      english?.title || "",
+    );
+
+    setEnglishCategory(
+      english?.category || "",
+    );
+
+    // ---------------------------------------------------
+    // NEPALI
+    // ---------------------------------------------------
+
+    setNepaliTitle(
+      nepali?.title || "",
+    );
+
+    setNepaliCategory(
+      nepali?.category || "",
+    );
+
+    // ---------------------------------------------------
+    // DATE
+    // ---------------------------------------------------
+
+    if (gallery.date) {
+      const parsedDate = new Date(
+        gallery.date,
+      );
+
+      if (
+        !Number.isNaN(
+          parsedDate.getTime(),
+        )
+      ) {
+        setDate(
+          parsedDate
+            .toISOString()
+            .split("T")[0],
+        );
+      } else {
+        setDate("");
+      }
+    } else {
+      setDate("");
+    }
+
+    // ---------------------------------------------------
+    // IMAGE
+    // ---------------------------------------------------
+
+    setImage(gallery.image || "");
+
+    setImagePreview(
+      gallery.image || "",
+    );
+
+    setSelectedImage(null);
+
     setError("");
-  }, [work]);
+  }, [gallery]);
 
   // =====================================================
-  // HANDLE INPUT CHANGE
+  // CLOSE IF NOT OPEN
   // =====================================================
 
-  function handleChange(
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-  ) {
-    const { name, value } = e.target;
-
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  if (!isOpen || !gallery) {
+    return null;
   }
 
   // =====================================================
-  // HANDLE IMAGE
+  // IMAGE CHANGE
   // =====================================================
 
-  function handleImageChange(e: ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  function handleImageChange(
+    e: ChangeEvent<HTMLInputElement>,
+  ) {
+    const file =
+      e.target.files?.[0];
 
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      setError("Image must be smaller than 5MB.");
+    // ---------------------------------------------------
+    // VALIDATE TYPE
+    // ---------------------------------------------------
+
+    if (!file.type.startsWith("image/")) {
+      setError(
+        "Only image files are allowed.",
+      );
+      return;
+    }
+
+    // ---------------------------------------------------
+    // VALIDATE SIZE
+    // ---------------------------------------------------
+
+    if (
+      file.size >
+      5 * 1024 * 1024
+    ) {
+      setError(
+        "Image must be smaller than 5MB.",
+      );
       return;
     }
 
     setError("");
 
-    const reader = new FileReader();
+    // Store selected file
+    setSelectedImage(file);
 
-    reader.onloadend = () => {
-      const base64Image = reader.result as string;
+    // Create preview
+    const previewUrl =
+      URL.createObjectURL(file);
 
-      setImagePreview(base64Image);
+    setImagePreview(previewUrl);
+  }
 
-      setForm((prev) => ({
-        ...prev,
-        image: base64Image,
-      }));
-    };
+  // =====================================================
+  // UPLOAD IMAGE TO CLOUDINARY
+  // =====================================================
 
-    reader.readAsDataURL(file);
+  async function uploadImageToCloudinary(
+    file: File,
+  ): Promise<string> {
+    const formData = new FormData();
+
+    formData.append(
+      "image",
+      file,
+    );
+
+    formData.append(
+      "folder",
+      "gallery",
+    );
+
+    const response =
+      await fetch(
+        "/api/cloudinary/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
+
+    const data =
+      await response.json();
+
+    if (
+      !response.ok ||
+      !data.success
+    ) {
+      throw new Error(
+        data?.error ||
+          "Failed to upload image",
+      );
+    }
+
+    return data.url;
   }
 
   // =====================================================
   // SUBMIT
   // =====================================================
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(
+    e: FormEvent<HTMLFormElement>,
+  ) {
     e.preventDefault();
 
     setError("");
 
+    // ===================================================
+    // VALIDATE ENGLISH
+    // ===================================================
+
+    if (!englishTitle.trim()) {
+      setError(
+        "English title is required.",
+      );
+      return;
+    }
+
+    if (!englishCategory.trim()) {
+      setError(
+        "English category is required.",
+      );
+      return;
+    }
+
+    // ===================================================
+    // VALIDATE NEPALI
+    // ===================================================
+
+    if (!nepaliTitle.trim()) {
+      setError(
+        "Nepali title is required.",
+      );
+      return;
+    }
+
+    if (!nepaliCategory.trim()) {
+      setError(
+        "Nepali category is required.",
+      );
+      return;
+    }
+
     try {
-      setSaving(true);
+      setLoading(true);
 
-      /*
-       * IMPORTANT:
-       *
-       * We use the ORIGINAL projectId in the URL.
-       *
-       * projectId cannot be changed.
-       */
-      const originalProjectId = work.projectId;
+      // =================================================
+      // KEEP CURRENT IMAGE
+      // =================================================
 
-      /*
-       * Build only the fields that are allowed
-       * to be updated.
-       *
-       * We DO NOT send projectId.
-       */
-      const updates: Record<string, unknown> = {};
+      let imageUrl = image;
 
-      /*
-       * Compare current form values with the
-       * original work values.
-       *
-       * Only changed values will be sent.
-       */
+      // =================================================
+      // UPLOAD NEW IMAGE IF SELECTED
+      // =================================================
 
-      if (form.title !== work.title) {
-        updates.title = form.title;
+      if (selectedImage) {
+        setUploading(true);
+
+        imageUrl =
+          await uploadImageToCloudinary(
+            selectedImage,
+          );
+
+        setUploading(false);
       }
 
-      if (form.description !== work.description) {
-        updates.description = form.description || "";
-      }
+      // =================================================
+      // PATCH GALLERY
+      // =================================================
 
-      if (form.image !== work.image) {
-        updates.image = form.image || "";
-      }
+      const response =
+        await fetch(
+          `/api/gallery/${gallery._id}`,
+          {
+            method: "PATCH",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              translations: [
+                {
+                  locale: "en",
+                  title:
+                    englishTitle.trim(),
+                  category:
+                    englishCategory.trim(),
+                },
+                {
+                  locale: "ne",
+                  title:
+                    nepaliTitle.trim(),
+                  category:
+                    nepaliCategory.trim(),
+                },
+              ],
+
+              image: imageUrl,
+
+              date:
+                date || undefined,
+            }),
+          },
+        );
+
+      const data =
+        await response.json();
+
+      // =================================================
+      // CHECK RESPONSE
+      // =================================================
 
       if (
-        JSON.stringify(form.galleryImages || []) !==
-        JSON.stringify(work.galleryImages || [])
+        !response.ok ||
+        !data.success
       ) {
-        updates.galleryImages = form.galleryImages || [];
+        throw new Error(
+          data?.message ||
+            "Failed to update gallery",
+        );
       }
 
-      if (form.category !== work.category) {
-        updates.category = form.category || "";
-      }
+      // =================================================
+      // SUCCESS
+      // =================================================
 
-      if (form.ward !== work.ward) {
-        updates.ward = form.ward || "";
-      }
-
-      if (form.status !== work.status) {
-        updates.status = form.status;
-      }
-
-      if (form.completedDate !== work.completedDate) {
-        updates.completedDate = form.completedDate || "";
-      }
-
-      if (form.location !== work.location) {
-        updates.location = form.location;
-      }
-
-      if (form.eventTypes !== work.eventTypes) {
-        updates.eventTypes = form.eventTypes;
-      }
-
-      if (form.eventCategory !== work.eventCategory) {
-        updates.eventCategory = form.eventCategory;
-      }
-
-      if (form.problem !== work.problem) {
-        updates.problem = form.problem;
-      }
-
-      if (form.action !== work.action) {
-        updates.action = form.action;
-      }
-
-      if (form.outcome !== work.outcome) {
-        updates.outcome = form.outcome;
-      }
-
-      // =====================================================
-      // NOTHING CHANGED
-      // =====================================================
-
-      if (Object.keys(updates).length === 0) {
-        setError("No changes were made.");
-        setSaving(false);
-        return;
-      }
-
-      console.log("Fields being updated:", updates);
-
-      // =====================================================
-      // PATCH REQUEST
-      // =====================================================
-
-      const response = await fetch(
-        `/api/works/${encodeURIComponent(originalProjectId)}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updates),
-        },
+      alert(
+        "Gallery updated successfully!",
       );
 
-      const data = await response.json();
+      // API returns:
+      //
+      // {
+      //   success: true,
+      //   message: "...",
+      //   data: updatedGallery
+      // }
 
-      console.log("Update work response:", data);
-
-      if (!response.ok) {
-        throw new Error(data?.message || "Failed to update work");
-      }
-
-      // =====================================================
-      // UPDATED WORK
-      // =====================================================
-
-      const updatedWork: Work = data.data;
-
-      onSave(updatedWork);
+      onUpdated(data.data);
 
       onClose();
     } catch (error) {
-      console.error("Update work error:", error);
+      console.error(
+        "Update gallery error:",
+        error,
+      );
 
       setError(
-        error instanceof Error ? error.message : "Failed to update work",
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while updating.",
       );
     } finally {
-      setSaving(false);
+      setLoading(false);
+      setUploading(false);
     }
   }
 
+  // =====================================================
+  // UI
+  // =====================================================
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget && !saving) {
-          onClose();
-        }
-      }}
+      className="
+        fixed
+        inset-0
+        z-50
+        flex
+        items-center
+        justify-center
+        bg-black/50
+        px-4
+        py-6
+      "
     >
       <div
         className="
-          relative
-          max-h-[90vh]
           w-full
-          max-w-[560px]
+          max-w-[600px]
           overflow-hidden
-          rounded-[16px]
+          rounded-2xl
           bg-white
-          shadow-[0px_12px_32px_rgba(0,0,0,0.18)]
+          shadow-xl
         "
-        onMouseDown={(e) => e.stopPropagation()}
       >
+        {/* =================================================
+            HEADER
+        ================================================= */}
+
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            border-b
+            px-6
+            py-5
+          "
+        >
+          <div>
+            <h2
+              className="
+                font-['Libre_Baskerville']
+                text-xl
+                font-semibold
+                text-[#221f1a]
+              "
+            >
+              Edit Gallery
+            </h2>
+
+            <p
+              className="
+                mt-1
+                text-sm
+                text-[#4a483f]
+              "
+            >
+              Update gallery information
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={loading}
+            className="
+              flex
+              h-9
+              w-9
+              items-center
+              justify-center
+              rounded-full
+              text-2xl
+              text-[#4a483f]
+              transition
+              hover:bg-gray-100
+              hover:text-[#221f1a]
+              disabled:cursor-not-allowed
+              disabled:opacity-50
+            "
+            aria-label="Close modal"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* =================================================
+            FORM
+        ================================================= */}
+
         <form onSubmit={handleSubmit}>
-          <div className="max-h-[90vh] overflow-y-auto px-10 py-9">
-            {/* =====================================================
-                HEADER
-            ===================================================== */}
-
-            <div className="mb-5 flex items-center justify-between">
-              <h2
-                className="
-                  font-serif
-                  text-[22px]
-                  font-bold
-                  leading-normal
-                  text-[#221f1a]
-                "
-              >
-                Edit Work Entry
-              </h2>
-
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={saving}
-                className="
-                  cursor-pointer
-                  text-[25px]
-                  font-semibold
-                  leading-none
-                  text-[#4a483f]
-                  disabled:cursor-not-allowed
-                  disabled:opacity-50
-                "
-                aria-label="Close modal"
-              >
-                ×
-              </button>
-            </div>
-
-            {/* =====================================================
+          <div
+            className="
+              max-h-[70vh]
+              space-y-5
+              overflow-y-auto
+              px-6
+              py-6
+            "
+          >
+            {/* =================================================
                 ERROR
-            ===================================================== */}
+            ================================================= */}
 
             {error && (
               <div
                 className="
-                  mb-5
-                  rounded-[8px]
+                  rounded-lg
                   border
                   border-red-200
                   bg-red-50
                   px-4
                   py-3
-                  text-[13px]
-                  text-red-700
+                  text-sm
+                  text-red-600
                 "
               >
                 {error}
               </div>
             )}
 
-            {/* =====================================================
-                PROJECT ID
-                READ ONLY
-            ===================================================== */}
+            {/* =================================================
+                ENGLISH SECTION
+            ================================================= */}
 
-            <div className="mb-5">
-              <label
-                htmlFor="projectId"
+            <div
+              className="
+                rounded-xl
+                border
+                border-[#e1d0cf]
+                bg-[#faf9f7]
+                p-4
+              "
+            >
+              <h3
                 className="
-                  mb-[6px]
-                  block
-                  text-[13px]
+                  mb-4
+                  text-sm
                   font-semibold
-                  text-[#221f1a]
+                  text-[#8A1538]
                 "
               >
-                Project ID
-              </label>
+                English
+              </h3>
 
-              <input
-                id="projectId"
-                value={work.projectId}
-                readOnly
-                className="
-                  h-11
-                  w-full
-                  rounded-[8px]
-                  border
-                  border-[#e1d0cf]
-                  bg-[#f7f6f3]
-                  px-[14px]
-                  text-[14px]
-                  text-[#4a483f]
-                  outline-none
-                  cursor-not-allowed
-                "
-              />
+              {/* ENGLISH TITLE */}
 
-              <p className="mt-1 text-[11px] text-[#77736a]">
-                Project ID cannot be changed.
-              </p>
-            </div>
-
-            {/* =====================================================
-                TITLE
-            ===================================================== */}
-
-            <div className="mb-5">
-              <label
-                htmlFor="title"
-                className="
-                  mb-[6px]
-                  block
-                  text-[13px]
-                  font-semibold
-                  text-[#221f1a]
-                "
-              >
-                Title
-              </label>
-
-              <input
-                id="title"
-                name="title"
-                value={form.title}
-                onChange={handleChange}
-                className="
-                  h-11
-                  w-full
-                  rounded-[8px]
-                  border
-                  border-[#e1d0cf]
-                  bg-white
-                  px-[14px]
-                  text-[14px]
-                  text-[#4a483f]
-                  outline-none
-                  focus:border-[#8a1538]
-                "
-              />
-            </div>
-
-            {/* =====================================================
-                STATUS
-            ===================================================== */}
-
-            <div className="mb-5">
-              <label
-                htmlFor="status"
-                className="
-                  mb-[6px]
-                  block
-                  text-[13px]
-                  font-semibold
-                  text-[#221f1a]
-                "
-              >
-                Status
-              </label>
-
-              <select
-                id="status"
-                name="status"
-                value={form.status}
-                onChange={handleChange}
-                className="
-                  h-11
-                  w-full
-                  rounded-[8px]
-                  border
-                  border-[#e1d0cf]
-                  bg-white
-                  px-[14px]
-                  text-[14px]
-                  text-[#4a483f]
-                  outline-none
-                  focus:border-[#8a1538]
-                "
-              >
-                <option value="Ongoing">Ongoing</option>
-
-                <option value="Completed">Completed</option>
-              </select>
-            </div>
-
-            {/* =====================================================
-                EVENT TYPE + CATEGORY
-            ===================================================== */}
-
-            <div className="mb-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div>
+              <div className="mb-4">
                 <label
-                  htmlFor="eventTypes"
+                  htmlFor="gallery-english-title"
                   className="
-                    mb-[6px]
+                    mb-2
                     block
-                    text-[13px]
-                    font-semibold
+                    text-sm
+                    font-medium
                     text-[#221f1a]
                   "
                 >
-                  Event Type
-                </label>
-
-                <select
-                  id="eventTypes"
-                  name="eventTypes"
-                  value={form.eventTypes}
-                  onChange={handleChange}
-                  className="
-                    h-11
-                    w-full
-                    appearance-none
-                    rounded-[8px]
-                    border
-                    border-[#e1d0cf]
-                    bg-white
-                    px-[14px]
-                    text-[14px]
-                    text-[#4a483f]
-                    outline-none
-                    focus:border-[#8a1538]
-                  "
-                >
-                  <option value="">Select type</option>
-
-                  <option value="Project">Project</option>
-
-                  <option value="Event">Event</option>
-
-                  <option value="Program">Program</option>
-
-                  <option value="Visit">Visit</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="eventCategory"
-                  className="
-                    mb-[6px]
-                    block
-                    text-[13px]
-                    font-semibold
-                    text-[#221f1a]
-                  "
-                >
-                  Event Category
-                </label>
-
-                <select
-                  id="eventCategory"
-                  name="eventCategory"
-                  value={form.eventCategory}
-                  onChange={handleChange}
-                  className="
-                    h-11
-                    w-full
-                    appearance-none
-                    rounded-[8px]
-                    border
-                    border-[#e1d0cf]
-                    bg-white
-                    px-[14px]
-                    text-[14px]
-                    text-[#4a483f]
-                    outline-none
-                    focus:border-[#8a1538]
-                  "
-                >
-                  <option value="">Select category</option>
-
-                  <option value="Infrastructure">Infrastructure</option>
-
-                  <option value="Education">Education</option>
-
-                  <option value="Health">Health</option>
-
-                  <option value="Agriculture">Agriculture</option>
-
-                  <option value="Disaster Relief">Disaster Relief</option>
-
-                  <option value="Youth Programs">Youth Programs</option>
-                </select>
-              </div>
-            </div>
-
-            {/* =====================================================
-                LOCATION
-            ===================================================== */}
-
-            <div className="mb-5">
-              <label
-                htmlFor="location"
-                className="
-                  mb-[6px]
-                  block
-                  text-[13px]
-                  font-semibold
-                  text-[#221f1a]
-                "
-              >
-                Location
-              </label>
-
-              <input
-                id="location"
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-                className="
-                  h-11
-                  w-full
-                  rounded-[8px]
-                  border
-                  border-[#e1d0cf]
-                  bg-white
-                  px-[14px]
-                  text-[14px]
-                  text-[#4a483f]
-                  outline-none
-                  focus:border-[#8a1538]
-                "
-              />
-            </div>
-
-            {/* =====================================================
-                PROBLEM
-            ===================================================== */}
-
-            <div className="mb-5">
-              <label
-                htmlFor="problem"
-                className="
-                  mb-[6px]
-                  block
-                  text-[13px]
-                  font-semibold
-                  text-[#221f1a]
-                "
-              >
-                Problem
-              </label>
-
-              <textarea
-                id="problem"
-                name="problem"
-                value={form.problem}
-                onChange={handleChange}
-                rows={4}
-                className="
-                  w-full
-                  resize-none
-                  rounded-[8px]
-                  border
-                  border-[#e1d0cf]
-                  bg-white
-                  px-[14px]
-                  py-3
-                  text-[14px]
-                  text-[#4a483f]
-                  outline-none
-                  focus:border-[#8a1538]
-                "
-              />
-            </div>
-
-            {/* =====================================================
-                ACTION + OUTCOME
-            ===================================================== */}
-
-            <div className="mb-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-              <div>
-                <label
-                  htmlFor="action"
-                  className="
-                    mb-[6px]
-                    block
-                    text-[13px]
-                    font-semibold
-                    text-[#221f1a]
-                  "
-                >
-                  Action
+                  Title
                 </label>
 
                 <input
-                  id="action"
-                  name="action"
-                  value={form.action}
-                  onChange={handleChange}
+                  id="gallery-english-title"
+                  type="text"
+                  value={englishTitle}
+                  onChange={(e) =>
+                    setEnglishTitle(
+                      e.target.value,
+                    )
+                  }
+                  disabled={loading}
+                  placeholder="Enter English title"
                   className="
-                    h-11
                     w-full
-                    rounded-[8px]
+                    rounded-lg
                     border
-                    border-[#e1d0cf]
+                    border-gray-300
                     bg-white
-                    px-[14px]
-                    text-[14px]
-                    text-[#4a483f]
+                    px-4
+                    py-3
+                    text-sm
+                    text-[#221f1a]
                     outline-none
-                    focus:border-[#8a1538]
+                    transition
+                    focus:border-[#8A1538]
+                    focus:ring-1
+                    focus:ring-[#8A1538]
+                    disabled:opacity-50
                   "
                 />
               </div>
 
+              {/* ENGLISH CATEGORY */}
+
               <div>
                 <label
-                  htmlFor="outcome"
+                  htmlFor="gallery-english-category"
                   className="
-                    mb-[6px]
+                    mb-2
                     block
-                    text-[13px]
-                    font-semibold
+                    text-sm
+                    font-medium
                     text-[#221f1a]
                   "
                 >
-                  Outcome
+                  Category
                 </label>
 
-                <input
-                  id="outcome"
-                  name="outcome"
-                  value={form.outcome}
-                  onChange={handleChange}
+                <select
+                  id="gallery-english-category"
+                  value={englishCategory}
+                  onChange={(e) =>
+                    setEnglishCategory(
+                      e.target.value,
+                    )
+                  }
+                  disabled={loading}
                   className="
-                    h-11
                     w-full
-                    rounded-[8px]
+                    rounded-lg
                     border
-                    border-[#e1d0cf]
+                    border-gray-300
                     bg-white
-                    px-[14px]
-                    text-[14px]
-                    text-[#4a483f]
+                    px-4
+                    py-3
+                    text-sm
+                    text-[#221f1a]
                     outline-none
-                    focus:border-[#8a1538]
+                    transition
+                    focus:border-[#8A1538]
+                    focus:ring-1
+                    focus:ring-[#8A1538]
+                    disabled:opacity-50
                   "
-                />
+                >
+                  <option value="">
+                    Select category
+                  </option>
+
+                  <option value="Events">
+                    Events
+                  </option>
+
+                  <option value="Development">
+                    Development
+                  </option>
+
+                  <option value="Meetings">
+                    Meetings
+                  </option>
+
+                  <option value="Community">
+                    Community
+                  </option>
+
+                  <option value="Other">
+                    Other
+                  </option>
+                </select>
               </div>
             </div>
 
-            {/* =====================================================
+            {/* =================================================
+                NEPALI SECTION
+            ================================================= */}
+
+            <div
+              className="
+                rounded-xl
+                border
+                border-[#e1d0cf]
+                bg-[#faf9f7]
+                p-4
+              "
+            >
+              <h3
+                className="
+                  mb-4
+                  text-sm
+                  font-semibold
+                  text-[#8A1538]
+                "
+              >
+                नेपाली
+              </h3>
+
+              {/* NEPALI TITLE */}
+
+              <div className="mb-4">
+                <label
+                  htmlFor="gallery-nepali-title"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-[#221f1a]
+                  "
+                >
+                  शीर्षक
+                </label>
+
+                <input
+                  id="gallery-nepali-title"
+                  type="text"
+                  value={nepaliTitle}
+                  onChange={(e) =>
+                    setNepaliTitle(
+                      e.target.value,
+                    )
+                  }
+                  disabled={loading}
+                  placeholder="नेपाली शीर्षक लेख्नुहोस्"
+                  className="
+                    w-full
+                    rounded-lg
+                    border
+                    border-gray-300
+                    bg-white
+                    px-4
+                    py-3
+                    text-sm
+                    text-[#221f1a]
+                    outline-none
+                    transition
+                    focus:border-[#8A1538]
+                    focus:ring-1
+                    focus:ring-[#8A1538]
+                    disabled:opacity-50
+                  "
+                />
+              </div>
+
+              {/* NEPALI CATEGORY */}
+
+              <div>
+                <label
+                  htmlFor="gallery-nepali-category"
+                  className="
+                    mb-2
+                    block
+                    text-sm
+                    font-medium
+                    text-[#221f1a]
+                  "
+                >
+                  वर्ग
+                </label>
+
+                <select
+                  id="gallery-nepali-category"
+                  value={nepaliCategory}
+                  onChange={(e) =>
+                    setNepaliCategory(
+                      e.target.value,
+                    )
+                  }
+                  disabled={loading}
+                  className="
+                    w-full
+                    rounded-lg
+                    border
+                    border-gray-300
+                    bg-white
+                    px-4
+                    py-3
+                    text-sm
+                    text-[#221f1a]
+                    outline-none
+                    transition
+                    focus:border-[#8A1538]
+                    focus:ring-1
+                    focus:ring-[#8A1538]
+                    disabled:opacity-50
+                  "
+                >
+                  <option value="">
+                    वर्ग चयन गर्नुहोस्
+                  </option>
+
+                  <option value="कार्यक्रम">
+                    कार्यक्रम
+                  </option>
+
+                  <option value="विकास">
+                    विकास
+                  </option>
+
+                  <option value="बैठक">
+                    बैठक
+                  </option>
+
+                  <option value="समुदाय">
+                    समुदाय
+                  </option>
+
+                  <option value="अन्य">
+                    अन्य
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            {/* =================================================
                 DATE
-            ===================================================== */}
+            ================================================= */}
 
-            <div className="mb-5">
+            <div>
               <label
-                htmlFor="completedDate"
+                htmlFor="gallery-date"
                 className="
-                  mb-[6px]
+                  mb-2
                   block
-                  text-[13px]
-                  font-semibold
+                  text-sm
+                  font-medium
                   text-[#221f1a]
                 "
               >
@@ -732,134 +868,194 @@ export default function EditWorkEntryModal({
               </label>
 
               <input
-                id="completedDate"
-                name="completedDate"
+                id="gallery-date"
                 type="date"
-                value={form.completedDate || ""}
-                onChange={handleChange}
+                value={date}
+                onChange={(e) =>
+                  setDate(
+                    e.target.value,
+                  )
+                }
+                disabled={loading}
                 className="
-                  h-11
                   w-full
-                  rounded-[8px]
+                  rounded-lg
                   border
-                  border-[#e1d0cf]
+                  border-gray-300
                   bg-white
-                  px-[14px]
-                  text-[14px]
-                  text-[#4a483f]
+                  px-4
+                  py-3
+                  text-sm
+                  text-[#221f1a]
                   outline-none
-                  focus:border-[#8a1538]
+                  transition
+                  focus:border-[#8A1538]
+                  focus:ring-1
+                  focus:ring-[#8A1538]
+                  disabled:opacity-50
                 "
               />
             </div>
 
-            {/* =====================================================
+            {/* =================================================
                 IMAGE
-            ===================================================== */}
+            ================================================= */}
 
-            <div className="mb-6">
+            <div>
               <label
                 className="
-                  mb-[6px]
+                  mb-2
                   block
-                  text-[13px]
-                  font-semibold
+                  text-sm
+                  font-medium
                   text-[#221f1a]
                 "
               >
                 Image
               </label>
 
-              <label
-                htmlFor="edit-work-image"
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={loading}
+                className="hidden"
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  fileInputRef.current?.click()
+                }
+                disabled={loading}
                 className="
                   flex
-                  h-[120px]
+                  h-48
+                  w-full
                   cursor-pointer
-                  flex-col
                   items-center
                   justify-center
                   overflow-hidden
-                  rounded-[8px]
+                  rounded-xl
                   border
                   border-dashed
-                  border-[#e1d0cf]
-                  bg-[#f7f6f3]
-                  text-[#4a483f]
+                  border-gray-300
+                  bg-gray-50
+                  transition
+                  hover:bg-gray-100
+                  disabled:cursor-not-allowed
+                  disabled:opacity-50
                 "
               >
                 {imagePreview ? (
                   <img
                     src={imagePreview}
-                    alt="Work preview"
-                    className="h-full w-full object-cover"
+                    alt={
+                      englishTitle ||
+                      "Gallery preview"
+                    }
+                    className="
+                      h-full
+                      w-full
+                      object-cover
+                    "
                   />
                 ) : (
-                  <>
-                    <span className="mb-1 text-[20px]">⬆</span>
+                  <div className="text-center">
+                    <div className="text-xl">
+                      ⬆
+                    </div>
 
-                    <span className="text-[13px]">Click to upload image</span>
-                  </>
+                    <p
+                      className="
+                        mt-1
+                        text-sm
+                        text-gray-500
+                      "
+                    >
+                      Click to upload image
+                    </p>
+                  </div>
                 )}
-              </label>
-
-              <input
-                id="edit-work-image"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-            </div>
-
-            {/* =====================================================
-                FOOTER
-            ===================================================== */}
-
-            <div className="flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={saving}
-                className="
-                  rounded-[8px]
-                  border-[1.5px]
-                  border-[#0b1f3a]
-                  bg-white
-                  px-6
-                  py-[14px]
-                  text-[16px]
-                  font-semibold
-                  text-[#0b1f3a]
-                  transition
-                  hover:bg-[#0b1f3a]/5
-                  disabled:cursor-not-allowed
-                  disabled:opacity-50
-                "
-              >
-                Cancel
               </button>
 
-              <button
-                type="submit"
-                disabled={saving}
+              <p
                 className="
-                  rounded-[8px]
-                  bg-[#8a1538]
-                  px-6
-                  py-[14px]
-                  text-[16px]
-                  font-semibold
-                  text-white
-                  transition
-                  hover:bg-[#72112f]
-                  disabled:cursor-not-allowed
-                  disabled:opacity-50
+                  mt-2
+                  text-xs
+                  text-gray-500
                 "
               >
-                {saving ? "Saving..." : "Save Changes"}
-              </button>
+                Select a new image only if you
+                want to replace the current one.
+                Maximum 5MB.
+              </p>
             </div>
+          </div>
+
+          {/* =================================================
+              FOOTER
+          ================================================= */}
+
+          <div
+            className="
+              flex
+              items-center
+              justify-end
+              gap-3
+              border-t
+              px-6
+              py-4
+            "
+          >
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={loading}
+              className="
+                rounded-lg
+                border
+                border-[#0b1f3a]
+                bg-white
+                px-5
+                py-2.5
+                text-sm
+                font-medium
+                text-[#0b1f3a]
+                transition
+                hover:bg-[#0b1f3a]
+                hover:text-white
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+              "
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="
+                rounded-lg
+                bg-[#8A1538]
+                px-5
+                py-2.5
+                text-sm
+                font-medium
+                text-white
+                transition
+                hover:bg-[#74122f]
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+              "
+            >
+              {uploading
+                ? "Uploading..."
+                : loading
+                  ? "Saving..."
+                  : "Save Changes"}
+            </button>
           </div>
         </form>
       </div>
